@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WanderWallet | 교환학생 가계부</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="WanderWallet 홈"><span class="brand-mark">W</span><span>WanderWallet</span></a>
+        <div class="month-nav">
+          <button class="icon-button" aria-label="이전 달">‹</button>
+          <span id="monthLabel">2026년 8월</span>
+          <button class="icon-button" aria-label="다음 달">›</button>
+        </div>
+        <div class="currency-picker"><span class="globe">◎</span><select id="currency" aria-label="기준 통화"><option value="KRW">KRW · ₩</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="JPY">JPY · ¥</option></select></div>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div><p class="eyebrow">YOUR MONTHLY SPEND</p><h1>여행은 가볍게,<br />지출은 <em>명확하게.</em></h1><p class="intro">낯선 도시에서의 매일을 기록해 보세요.<br />작은 지출까지 한눈에 정리해 드려요.</p></div>
+          <div class="hero-stamp" aria-hidden="true"><span>✦</span><span>NEW<br />MEMORIES</span><span>✦</span></div>
+        </section>
+
+        <section class="summary-grid" aria-label="이번 달 요약">
+          <article class="summary-card total"><p>이번 달 지출</p><strong id="totalSpend">₩0</strong><span id="entryCount">아직 기록된 지출이 없어요</span></article>
+          <article class="summary-card"><p>가장 많이 쓴 항목</p><strong id="topCategory">—</strong><span id="topCategoryAmount">지출을 기록해 보세요</span></article>
+          <article class="summary-card budget"><p>이번 달 예산</p><strong id="budgetAmount">₩1,500,000</strong><div class="progress"><i id="budgetProgress"></i></div><span id="budgetStatus">예산을 설정해 보세요</span></article>
+        </section>
+
+        <section class="content-grid">
+          <div class="left-column">
+            <section class="panel add-panel"><div class="panel-heading"><div><p class="eyebrow">QUICK ADD</p><h2>오늘의 지출 기록</h2></div><span class="date-badge" id="todayLabel"></span></div>
+              <form id="expenseForm">
+                <label>무엇을 결제했나요?<input id="expenseName" type="text" placeholder="예: 학교 앞 커피" maxlength="40" required /></label>
+                <div class="form-row"><label>금액<input id="expenseAmount" type="number" min="1" step="1" placeholder="0" required /></label><label>카테고리<select id="expenseCategory"><option value="식비">식비</option><option value="교통">교통</option><option value="생활">생활</option><option value="여행">여행</option><option value="학업">학업</option><option value="기타">기타</option></select></label></div>
+                <button class="primary-button" type="submit"><span>+</span> 지출 추가하기</button>
+              </form>
+            </section>
+            <section class="panel records-panel"><div class="panel-heading"><div><p class="eyebrow">RECENT ACTIVITY</p><h2>최근 지출</h2></div><button class="text-button" id="clearButton" type="button">전체 삭제</button></div><div id="expenseList" class="expense-list"><div class="empty-state">아직 기록이 없어요. 첫 지출을 추가해 보세요.</div></div></section>
+          </div>
+          <aside class="right-column">
+            <section class="panel chart-panel"><div class="panel-heading"><div><p class="eyebrow">SPENDING BREAKDOWN</p><h2>카테고리별 지출</h2></div></div><div class="chart-wrap"><div id="donut" class="donut"><div><strong id="chartTotal">₩0</strong><span>총 지출</span></div></div></div><div id="legend" class="legend"></div></section>
+            <section class="tip-card"><span class="tip-icon">✦</span><div><p>이번 달 한마디</p><strong id="tipText">기록을 시작하면 맞춤 팁을 드릴게요.</strong></div></section>
+          </aside>
+        </section>
+      </main>
+      <footer><span>WanderWallet</span><span>made for the little moments abroad</span></footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
