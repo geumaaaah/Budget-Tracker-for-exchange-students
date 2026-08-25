@@ -12,6 +12,7 @@ expenses=expenses.map(x=>({...(x.baseAmount===undefined?{...x,inputAmount:x.amou
 const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:['EUR','USD'].includes(c)?2:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,formatBudget=x=>`${symbols[baseCurrency]||''}${new Intl.NumberFormat('ko-KR',{maximumFractionDigits:0}).format(Math.round(x))}`,allCategories=()=>categoryOrder;
 
 const save=()=>localStorage.setItem(dataKey,JSON.stringify(expenses));
+save();
 
 const expenseDate=document.querySelector('#expenseDate'),toDateValue=date=>date.toISOString().slice(0,10);
 expenseDate.value=toDateValue(today);
