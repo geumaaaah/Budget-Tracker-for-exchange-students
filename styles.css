@@ -70,7 +70,7 @@ input:focus,select:focus{border-color:var(--orange)}
 .tip-card p{font:700 20px 'DM Sans';letter-spacing:-1px;margin:0 0 8px;color:var(--ink)}
 .tip-card strong{font:400 14px/1.65 'DM Sans';color:var(--ink)}
 footer{border-top:1px solid var(--line);padding:23px 0 29px;display:flex;color:var(--muted);font:10px 'DM Mono'}.footer-brand{font:800 16px 'DM Sans',sans-serif;letter-spacing:-.8px}.footer-brand i{font-style:normal;color:var(--orange)}.footer-brand b{color:var(--ink)}.footer-brand small{font:400 13px 'DM Sans',sans-serif;letter-spacing:0;color:var(--muted)}.modal-backdrop{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:20px;background:rgba(30,34,31,.47);backdrop-filter:blur(3px)}.modal-backdrop[hidden]{display:none}.currency-modal{width:min(440px,100%);background:var(--card);padding:37px;border:1px solid var(--ink);box-shadow:8px 8px 0 var(--orange)}.modal-symbol{display:block;color:var(--orange);font-size:27px;margin-bottom:19px}.currency-modal h2{font:800 28px/1.28 'Nanum Myeongjo';letter-spacing:-1.5px;margin:0 0 13px}.currency-modal>p{font-size:13px;line-height:1.65;color:var(--muted);margin:0 0 26px}.currency-modal label{display:block;font-size:12px;color:var(--muted);margin-bottom:16px}.currency-modal small{display:block;min-height:14px;margin-top:11px;color:var(--orange);font-size:10px}
-@media(max-width:720px){.app-shell{padding:0 5vw}.form-row.three{grid-template-columns:1fr}
+@media(max-width:720px){main{display:flex;flex-direction:column}.hero{order:1}.content-grid,.left-column,.right-column{display:contents}.add-panel{order:2;margin-top:22px}.records-panel{order:3;margin-top:22px}.chart-panel{order:4;margin-top:22px}.summary-grid{order:5;margin-top:22px}.tip-card{order:6;margin-top:22px}.feedback-cta{order:7;margin-top:22px}.app-shell{padding:0 5vw}.form-row.three{grid-template-columns:1fr}
 .topbar{height:70px}
 .brand{font-size:14px}
 .month-nav{display:none}
@@ -83,7 +83,6 @@ footer{border-top:1px solid var(--line);padding:23px 0 29px;display:flex;color:v
 .panel{padding:23px 20px}
 .legend{grid-template-columns:1fr}
 .right-column{display:contents}
-.chart-panel{order:3}
 footer{font-size:8px}
 .hero h1{letter-spacing:-2px}
 }
