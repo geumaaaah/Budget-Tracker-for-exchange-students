@@ -76,7 +76,7 @@ footer{border-top:1px solid var(--line);padding:23px 0 29px;display:flex;color:v
 .month-nav{display:none}
 .hero{padding:53px 0 40px}
 .hero-stamp{width:90px;height:90px;font-size:8px}
-.summary-grid,.content-grid{grid-template-columns:1fr}
+.summary-grid{grid-template-columns:1fr 1fr}.summary-grid .budget{grid-column:1/-1}.content-grid{grid-template-columns:1fr}
 .summary-card{border-left:0;border-top:1px solid var(--line)}
 .summary-card:first-child{border-top:0}
 .content-grid{padding-top:22px}
