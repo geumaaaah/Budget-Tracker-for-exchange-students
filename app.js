@@ -30,7 +30,7 @@ const list='KRW,USD,EUR,JPY',a=fetchWithTimeout(`https://api.frankfurter.app/lat
 rateRequest=Promise.any([a,b]).then(r=>{rates=r.rates;
 rateDate=r.date;
 localStorage.setItem(rateCacheKey,JSON.stringify({base:baseCurrency,rates,date:rateDate}));
-note()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'));
+render()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'));
 return rateRequest}
 function convert(amount,input){const x=input===baseCurrency?amount:rates?.[input]?amount/rates[input]:null;
 return x===null?null:['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
@@ -45,6 +45,8 @@ function renderCategories(){document.querySelector('#categoryOptions').innerHTML
 function render(){const total=expenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:expenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),top=[...grouped].sort((a,b)=>b.value-a.value)[0],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(today.getFullYear(),today.getMonth()+1,0).getDate(),monthProgress=Math.round(today.getDate()/daysInMonth*100);
 document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
 document.querySelector('#totalSpend').textContent=format(total);
+const totalKrw=baseCurrency==='KRW'?total:rates?.KRW?total*rates.KRW:null;
+document.querySelector('#totalSpendKrw').textContent=totalKrw===null?'원화 환산 중…':`약 ₩${money(totalKrw,'KRW')}`;
 document.querySelector('#chartTotal').textContent=format(total);
 document.querySelector('#entryCount').textContent=expenses.length?`${expenses.length}건 · 모두 ${baseCurrency}로 환산 기록`:'아직 기록된 지출이 없어요';
 document.querySelector('#budgetAmount').textContent=budget?format(budget):'예산 미설정';
