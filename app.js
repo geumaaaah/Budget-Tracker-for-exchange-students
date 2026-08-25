@@ -49,7 +49,9 @@ document.querySelector('#chartTotal').textContent=format(total);
 document.querySelector('#entryCount').textContent=expenses.length?`${expenses.length}건 · 모두 ${baseCurrency}로 환산 기록`:'아직 기록된 지출이 없어요';
 document.querySelector('#budgetAmount').textContent=budget?format(budget):'예산 미설정';
 document.querySelector('#budgetProgress').style.width=`${ratio}%`;
-document.querySelector('#budgetStatus').textContent=budget?`예산의 ${Math.round(total/budget*100)}%를 사용했어요 · 이번 달이 ${monthProgress}% 지났어요`:`이번 달이 ${monthProgress}% 지났어요 · 수정 버튼으로 예산을 설정하세요`;
+document.querySelector('#budgetStatus').textContent=budget?`예산의 ${Math.round(total/budget*100)}%를 사용했어요`:'수정 버튼으로 예산을 설정하세요';
+document.querySelector('#monthStatus').textContent=`이번 달이 ${monthProgress}% 지났어요`;
+document.querySelector('#monthProgress').style.width=`${monthProgress}%`;
 document.querySelector('#topCategory').textContent=top?top.name:'—';
 document.querySelector('#topCategoryAmount').textContent=top?`${format(top.value)} 지출`:'지출을 기록해 보세요';
 let p=0;
@@ -71,16 +73,9 @@ restoreCachedRates();
 render();
 loadRates()};
 
-document.querySelector('#editBudget').onclick=()=>{document.querySelector('#budgetInput').value=budget||'';
-document.querySelector('#budgetValue').hidden=true;
-document.querySelector('#budgetForm').hidden=false;
-document.querySelector('#budgetInput').focus()};
-document.querySelector('#budgetForm').onsubmit=e=>{e.preventDefault();
-budget=Number(document.querySelector('#budgetInput').value);
-localStorage.setItem(budgetKey,budget);
-e.target.hidden=true;
-document.querySelector('#budgetValue').hidden=false;
-render()};
+function saveBudget(){const amount=document.querySelector('#budgetAmount'),value=Number(amount.textContent.replace(/[^0-9.]/g,''));if(!value)return alert('올바른 예산 금액을 입력해 주세요.');budget=value;localStorage.setItem(budgetKey,budget);amount.contentEditable='false';document.querySelector('#editBudget').textContent='수정';render()}
+document.querySelector('#editBudget').onclick=()=>{const amount=document.querySelector('#budgetAmount');if(amount.contentEditable==='true')return saveBudget();amount.textContent=budget||'';amount.contentEditable='true';document.querySelector('#editBudget').textContent='저장';amount.focus()};
+document.querySelector('#budgetAmount').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveBudget()}};
 
 document.querySelector('#addCategory').onclick=()=>{const name=prompt('새 지출 항목 이름을 입력하세요.');
 if(!name?.trim()||allCategories().includes(name.trim()))return;
