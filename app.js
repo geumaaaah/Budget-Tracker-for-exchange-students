@@ -1,4 +1,4 @@
-const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories',categoryOrderKey='wander-wallet-category-order';
+const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories',categoryOrderKey='wander-wallet-category-order',onboardingKey='wander-wallet-onboarding-complete';
 
 const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48','#8fc6b1','#92b5d5','#b8a5d4','#b4aca0'],icons={식비:'☕',교통:'◈',생활:'⌂',여행:'✦',학업:'✎',기타:'○'},defaultCategories=['식비','교통','생활','여행','학업','기타'];
 
@@ -68,6 +68,7 @@ document.querySelector('#currencyModal').hidden=false}
 document.querySelector('#settingsButton').onclick=openModal;
 document.querySelector('#saveBaseCurrency').onclick=()=>{baseCurrency=document.querySelector('#baseCurrencySelect').value;
 localStorage.setItem(baseKey,baseCurrency);
+localStorage.setItem(onboardingKey,'true');
 document.querySelector('#currencyModal').hidden=true;
 restoreCachedRates();
 render();
@@ -115,6 +116,6 @@ save();
 render()}};
 
 renderCategories();
-if(!baseCurrency)openModal();
+if(!baseCurrency&&!localStorage.getItem(onboardingKey))openModal();
 else{render();
 loadRates()}
