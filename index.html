@@ -29,7 +29,7 @@
         <section class="summary-grid" aria-label="이번 달 요약">
           <article class="summary-card total"><p>이번 달 지출</p><strong id="totalSpend">₩0</strong><span id="entryCount">아직 기록된 지출이 없어요</span></article>
           <article class="summary-card"><p>가장 많이 쓴 항목</p><strong id="topCategory">—</strong><span id="topCategoryAmount">지출을 기록해 보세요</span></article>
-          <article class="summary-card budget"><p>이번 달 예산</p><div class="budget-value"><strong id="budgetAmount">—</strong><button id="editBudget" type="button">수정</button></div><div class="progress"><i id="budgetProgress"></i></div><span id="budgetStatus">예산을 설정해 보세요</span><div class="month-progress-label"><span id="monthStatus">이번 달이 0% 지났어요</span></div><div class="progress month-progress"><i id="monthProgress"></i></div></article>
+          <article class="summary-card budget"><p>이번 달 예산</p><div class="budget-value"><strong id="budgetAmount">—</strong><button id="editBudget" type="button">수정</button></div><div class="month-progress-label"><span id="budgetStatus">예산을 설정해 보세요</span></div><div class="progress"><i id="budgetProgress"></i></div><div class="month-progress-label"><span id="monthStatus">이번 달이 0% 지났어요</span></div><div class="progress month-progress"><i id="monthProgress"></i></div></article>
         </section>
 
         <section class="content-grid">
@@ -56,6 +56,6 @@
     <div class="modal-backdrop" id="currencyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <section class="currency-modal"><span class="modal-symbol">◎</span><p class="eyebrow">WELCOME TO WANDERWALLET</p><h2 id="modalTitle">기록 기준 통화를<br />정해 주세요.</h2><p>모든 지출은 이 통화로 환산되어 기록돼요.<br />유럽 생활비는 EUR로, 한국 지출은 KRW로 입력해도 괜찮아요.</p><label>기준 통화<select id="baseCurrencySelect"><option value="EUR">EUR · 유로 (€)</option><option value="KRW">KRW · 대한민국 원 (₩)</option><option value="USD">USD · 미국 달러 ($)</option><option value="JPY">JPY · 일본 엔 (¥)</option></select></label><button class="primary-button" id="saveBaseCurrency" type="button">이 통화로 시작하기</button><small id="baseChangeWarning"></small></section>
     </div>
-    <script src="app.js?v=20260825-8"></script>
+    <script src="app.js?v=20260825-9"></script>
   </body>
 </html>

@@ -26,7 +26,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .summary-card span{font-size:14px;color:var(--muted)}
 .progress{height:4px;background:#e5e1d7;margin:13px 0 8px;overflow:hidden}
 .progress i{display:block;height:100%;width:0;background:var(--orange);transition:width .35s}
-.budget-value{display:flex;align-items:baseline;gap:10px}.budget-value strong[contenteditable="true"]{outline:1px solid var(--orange);outline-offset:4px}.budget-value button,.category-label button{border:0;background:transparent;color:var(--orange);font:12px 'DM Sans';cursor:pointer;padding:0}.month-progress-label{margin-top:17px}.month-progress-label span{font-size:12px}.month-progress{margin-top:7px}.month-progress i{background:var(--blue)}
+.budget-value{display:flex;align-items:baseline;gap:10px}.budget-value strong[contenteditable="true"]{outline:1px solid var(--orange);outline-offset:4px}.budget-value button,.category-label button{border:0;background:transparent;color:var(--orange);font:12px 'DM Sans';cursor:pointer;padding:0}.month-progress-label{margin-top:17px}.month-progress-label span{font-size:14px}.month-progress{margin-top:7px}.month-progress i{background:var(--blue)}
 .content-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,.83fr);gap:25px;padding:34px 0 61px}
 .left-column,.right-column{display:flex;flex-direction:column;gap:25px}
 .panel{background:var(--card);border:1px solid var(--line);padding:27px 29px}
