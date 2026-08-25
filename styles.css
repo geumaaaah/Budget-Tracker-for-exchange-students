@@ -23,7 +23,8 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .summary-card p{font:600 14px 'DM Sans';letter-spacing:-.4px;margin:0 0 12px;color:var(--ink)}
 .summary-card strong{display:block;font-size:24px;letter-spacing:-1px;margin-bottom:7px}
 .summary-card.total strong{font-size:31px;color:var(--orange)}
-#totalSpendKrw{display:block;font-size:31px;line-height:1.1;letter-spacing:-1px;color:var(--muted);margin-bottom:7px}
+#totalSpendKrw{display:block;font-size:31px;font-weight:700;line-height:1.1;letter-spacing:-1px;color:var(--muted);margin-bottom:7px}
+#topCategoryAmount{display:block;font-size:24px;font-weight:700;letter-spacing:-1px;color:var(--muted)}
 .summary-card span{font-size:14px;color:var(--muted)}
 .progress{height:4px;background:#e5e1d7;margin:13px 0 8px;overflow:hidden}
 .progress i{display:block;height:100%;width:0;background:var(--orange);transition:width .35s}

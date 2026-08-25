@@ -50,7 +50,7 @@ function render(){const monthExpenses=expenses.filter(x=>{const date=new Date(x.
 document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
 document.querySelector('#totalSpend').textContent=format(total);
 const totalKrw=baseCurrency==='KRW'?total:rates?.KRW?total*rates.KRW:null;
-document.querySelector('#totalSpendKrw').textContent=totalKrw===null?'원화 환산 중…':`약 ₩${money(totalKrw,'KRW')}`;
+document.querySelector('#totalSpendKrw').textContent=totalKrw===null?'원화 환산 중…':`₩${money(totalKrw,'KRW')}`;
 document.querySelector('#chartTotal').textContent=format(total);
 document.querySelector('#budgetAmount').textContent=budget?format(budget):'예산 미설정';
 document.querySelector('#budgetProgress').style.width=`${ratio}%`;
