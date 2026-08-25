@@ -1,14 +1,14 @@
-const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories';
+const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories',categoryOrderKey='wander-wallet-category-order';
 
-const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48','#8fc6b1','#92b5d5','#b8a5d4','#b4aca0'],icons={식비:'☕',교통:'◈',생활:'⌂',여행:'✦',학업:'✎',기타:'○'},categories=['식비','교통','생활','여행','학업','기타'];
+const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48','#8fc6b1','#92b5d5','#b8a5d4','#b4aca0'],icons={식비:'☕',교통:'◈',생활:'⌂',여행:'✦',학업:'✎',기타:'○'},defaultCategories=['식비','교통','생활','여행','학업','기타'];
 
 let baseCurrency=localStorage.getItem(baseKey)||localStorage.getItem(legacyKey)||'';
 
-let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]');
+let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]'),categoryOrder=JSON.parse(localStorage.getItem(categoryOrderKey)||'null')||[...defaultCategories,...customCategories];
 
 expenses=expenses.map(x=>({...(x.baseAmount===undefined?{...x,inputAmount:x.amount,inputCurrency:baseCurrency||'KRW',baseAmount:x.amount}:x),categories:x.categories||[x.category||'식비']}));
 
-const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:['EUR','USD'].includes(c)?2:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,allCategories=()=>[...categories,...customCategories];
+const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:['EUR','USD'].includes(c)?2:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,allCategories=()=>categoryOrder;
 
 const save=()=>localStorage.setItem(dataKey,JSON.stringify(expenses));
 
@@ -41,7 +41,7 @@ return}if(!amount){el.textContent=`입력 금액은 ${symbols[baseCurrency]} ${b
 return}const x=convert(amount,input);
 el.textContent=x===null?'환율을 빠르게 불러오는 중이에요…':`${symbols[input]}${money(amount,input)} → ${format(x)}${rateDate?` · ${rateDate} 기준 환율`:''}`}
 function esc(x){return x.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function renderCategories(){document.querySelector('#categoryOptions').innerHTML=allCategories().map((x,i)=>`<label class="category-option"><input type="checkbox" name="expenseCategory" value="${esc(x)}" ${i===0?'checked':''}><span>${esc(x)}</span></label>`).join('')}
+function renderCategories(){document.querySelector('#categoryOptions').innerHTML=allCategories().map((x,i)=>`<label class="category-option" draggable="true" data-category="${esc(x)}"><input type="checkbox" name="expenseCategory" value="${esc(x)}" ${i===0?'checked':''}><span>${esc(x)}</span></label>`).join('')}
 function render(){const total=expenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:expenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),top=[...grouped].sort((a,b)=>b.value-a.value)[0],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(today.getFullYear(),today.getMonth()+1,0).getDate(),monthProgress=Math.round(today.getDate()/daysInMonth*100);
 document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
 document.querySelector('#totalSpend').textContent=format(total);
@@ -81,7 +81,17 @@ document.querySelector('#addCategory').onclick=()=>{const name=prompt('새 지�
 if(!name?.trim()||allCategories().includes(name.trim()))return;
 customCategories.push(name.trim());
 localStorage.setItem(customCategoryKey,JSON.stringify(customCategories));
+categoryOrder.push(name.trim());
+localStorage.setItem(categoryOrderKey,JSON.stringify(categoryOrder));
 renderCategories()};
+
+let draggedCategory='';
+const categoryOptions=document.querySelector('#categoryOptions');
+categoryOptions.addEventListener('dragstart',e=>{const item=e.target.closest('.category-option');if(!item)return;draggedCategory=item.dataset.category;item.classList.add('dragging')});
+categoryOptions.addEventListener('dragend',e=>{e.target.closest('.category-option')?.classList.remove('dragging');categoryOptions.querySelectorAll('.drag-over').forEach(x=>x.classList.remove('drag-over'))});
+categoryOptions.addEventListener('dragover',e=>{e.preventDefault();const item=e.target.closest('.category-option');if(item&&item.dataset.category!==draggedCategory)item.classList.add('drag-over')});
+categoryOptions.addEventListener('dragleave',e=>e.target.closest('.category-option')?.classList.remove('drag-over'));
+categoryOptions.addEventListener('drop',e=>{e.preventDefault();const target=e.target.closest('.category-option');if(!target||!draggedCategory)return;const from=categoryOrder.indexOf(draggedCategory),to=categoryOrder.indexOf(target.dataset.category);categoryOrder.splice(from,1);categoryOrder.splice(to,0,draggedCategory);localStorage.setItem(categoryOrderKey,JSON.stringify(categoryOrder));renderCategories();render();draggedCategory=''});
 
 document.querySelector('#expenseAmount').oninput=note;
 document.querySelector('#inputCurrency').onchange=note;
