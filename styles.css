@@ -11,10 +11,10 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .globe{font-size:21px}
 .hero{display:flex;justify-content:space-between;align-items:center;padding:74px 5.8vw 51px 1.8vw}
 .eyebrow{color:var(--orange);font:500 10px 'DM Mono';letter-spacing:1.4px;margin:0 0 10px}
-.hero h1{font:800 clamp(38px,4.3vw,61px)/1.14 'Nanum Myeongjo',serif;letter-spacing:-3px;margin:0}
+.hero h1{font:800 clamp(42px,4.3vw,61px)/1.05 'DM Sans',sans-serif;letter-spacing:-3px;margin:0}
 .hero h1 em{font-style:normal;color:var(--orange)}
 .hero h1 .trip-word{color:var(--orange)}.hero h1 .tally-word{color:var(--ink)}
-.intro{color:var(--muted);line-height:1.7;font-size:14px;margin:23px 0 0}
+.intro{color:var(--muted);line-height:1.45;font-size:clamp(20px,2.1vw,30px);letter-spacing:-1.2px;margin:23px 0 0}
 .hero-stamp{width:132px;height:132px;border:1px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;gap:6px;transform:rotate(12deg);font:500 10px/1.2 'DM Mono';text-align:center}
 .hero-stamp span:first-child,.hero-stamp span:last-child{font-size:16px;color:var(--orange)}
 .summary-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
@@ -31,7 +31,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .left-column,.right-column{display:flex;flex-direction:column;gap:25px}
 .panel{background:var(--card);border:1px solid var(--line);padding:27px 29px}
 .panel-heading{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:23px}
-.panel h2{font:700 20px 'Nanum Myeongjo';letter-spacing:-1px;margin:0}
+.panel h2{font:700 20px 'DM Sans',sans-serif;letter-spacing:-1px;margin:0}
 .date-badge{background:#f1eee5;padding:6px 9px;font:10px 'DM Mono';color:#6a685f}
 form label{display:block;font-size:12px;color:var(--muted);margin-bottom:16px}
 input,select{display:block;width:100%;border:0;border-bottom:1px solid #cfcac0;border-radius:0;background:transparent;padding:10px 0 9px;margin-top:4px;color:var(--ink);font:500 15px 'DM Sans';outline:none}
@@ -85,3 +85,4 @@ footer span:first-child{color:var(--ink);font-weight:500}.modal-backdrop{positio
 footer{font-size:8px}
 .hero h1{letter-spacing:-2px}
 }
+.currency-modal h2{font-family:'DM Sans',sans-serif}
