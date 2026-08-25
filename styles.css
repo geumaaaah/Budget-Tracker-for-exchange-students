@@ -25,6 +25,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .summary-card span{font-size:12px;color:var(--muted)}
 .progress{height:4px;background:#e5e1d7;margin:13px 0 8px;overflow:hidden}
 .progress i{display:block;height:100%;width:0;background:var(--orange);transition:width .35s}
+.budget-title{display:flex;align-items:flex-start;justify-content:space-between}.budget-title button,.category-label button{border:0;background:transparent;color:var(--orange);font:11px 'DM Sans';cursor:pointer;padding:0}.budget-form{display:flex;gap:8px;margin:2px 0}.budget-form input{margin:0;padding:4px 0}.budget-form button{border:0;background:var(--ink);color:white;font:11px 'DM Sans';padding:5px 8px;cursor:pointer}
 .content-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,.83fr);gap:25px;padding:34px 0 61px}
 .left-column,.right-column{display:flex;flex-direction:column;gap:25px}
 .panel{background:var(--card);border:1px solid var(--line);padding:27px 29px}
@@ -35,6 +36,7 @@ form label{display:block;font-size:12px;color:var(--muted);margin-bottom:16px}
 input,select{display:block;width:100%;border:0;border-bottom:1px solid #cfcac0;border-radius:0;background:transparent;padding:10px 0 9px;margin-top:4px;color:var(--ink);font:500 15px 'DM Sans';outline:none}
 input:focus,select:focus{border-color:var(--orange)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:22px}.form-row.three{grid-template-columns:1fr 1fr 1fr;gap:18px}.conversion-note{min-height:18px;margin:-4px 0 16px;font:11px 'DM Mono';color:var(--muted)}
+.category-field{border:0;padding:0;margin:3px 0 15px}.category-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.category-label legend{font-size:12px;color:var(--muted)}.category-label legend span{font:10px 'DM Mono';color:#9d9b94;margin-left:4px}.category-options{display:flex;flex-wrap:wrap;gap:7px}.category-option input{position:absolute;opacity:0;pointer-events:none}.category-option span{display:block;border:1px solid var(--line);padding:7px 10px;color:var(--muted);font-size:12px;cursor:pointer}.category-option input:checked+span{background:var(--ink);border-color:var(--ink);color:#fff}
 .primary-button{border:0;background:var(--ink);color:#fffdf8;width:100%;padding:14px;cursor:pointer;font:500 13px 'DM Sans';transition:background .2s}
 .primary-button:hover{background:var(--orange)}
 .primary-button span{font-size:17px;margin-right:5px}
