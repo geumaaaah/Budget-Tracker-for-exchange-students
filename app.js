@@ -66,7 +66,8 @@ p+=x.value/total*100;
 return `${x.color} ${a}% ${p}%`}).join(',')})`:'#ebe7dd';
 document.querySelector('#legend').innerHTML=grouped.length?grouped.map(x=>`<div class="legend-item"><span class="legend-left"><i class="legend-dot" style="background:${x.color}"></i>${x.name}</span><span class="legend-price">${format(x.value)}</span></div>`).join(''):'<div class="empty-state">카테고리 분석은 지출을 추가한 뒤 표시돼요.</div>';
 document.querySelector('#expenseList').innerHTML=monthExpenses.length?[...monthExpenses].reverse().map(x=>`<div class="expense-item"><span class="category-icon" style="background:${colors[allCategories().indexOf(x.categories[0])%colors.length]}33">${icons[x.categories[0]]||'•'}</span><div><div class="expense-name">${esc(x.name)}</div><div class="expense-meta">${esc(x.categories.join(' · '))} · ${x.date} · ${symbols[x.inputCurrency]}${money(x.inputAmount,x.inputCurrency)}</div></div><span class="expense-price">${format(x.baseAmount)}</span><button class="delete-button" data-id="${x.id}">×</button></div>`).join(''):'<div class="empty-state">이 달에는 아직 기록이 없어요.</div>';
-document.querySelector('#tipText').textContent=!top?'기록을 시작하면 맞춤 팁을 드릴게요.':`${top.name} 항목이 가장 커요. 다음 소비 전 한 번 더 살펴보세요.`;
+const budgetGap=budget?Math.round(total/budget*100)-monthProgress:null;
+document.querySelector('#tipText').textContent=budgetGap===null?'예산을 설정하면 소비 속도를 비교해 드릴게요.':Math.abs(budgetGap)<=10?'달이 지난 속도에 맞춰 적절하게 사용하고 있어요.':budgetGap>10?'달이 지난 속도보다 지출이 빠릅니다. 남은 기간의 예산을 살펴보세요.':'달이 지난 속도보다 지출이 적어요. 현재처럼 여유 있게 관리해 보세요.';
 note()}
 function openModal(){document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';
 document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
