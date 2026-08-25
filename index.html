@@ -17,13 +17,13 @@
           <span id="monthLabel">2026년 8월</span>
           <button class="icon-button" id="nextMonth" aria-label="다음 달">›</button>
         </div>
-        <button class="currency-picker" id="settingsButton" type="button"><span class="globe">◎</span><span id="baseCurrencyLabel">기준 통화 설정</span></button>
+        <div class="topbar-actions"><button class="report-button" id="reportButton" type="button">월별 리포트</button><button class="currency-picker" id="settingsButton" type="button"><span class="globe">◎</span><span id="baseCurrencyLabel">기준 통화 설정</span></button></div>
       </header>
 
       <main id="top">
         <section class="hero">
           <div><h1><span class="trip-word">Trip</span> <span class="tally-word">Tally</span></h1><p class="intro">낯선 도시에서의 매일을 기록해보세요.</p></div>
-          <div class="hero-stamp" aria-hidden="true"><span>✦</span><span>NEW<br />MEMORIES</span><span>✦</span></div>
+          <section class="exchange-card" aria-label="환율 그래프"><div class="exchange-top"><div><p class="eyebrow">EXCHANGE RATE</p><strong id="exchangeRateValue">환율 불러오는 중…</strong></div><div class="pair-selects"><select id="graphBase" aria-label="기준 통화"><option value="EUR">EUR</option><option value="KRW">KRW</option><option value="USD">USD</option><option value="JPY">JPY</option></select><span>→</span><select id="graphQuote" aria-label="비교 통화"><option value="KRW">KRW</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="JPY">JPY</option></select></div></div><span id="exchangeRateDate">최근 30일 추이</span><svg id="exchangeChart" viewBox="0 0 330 105" role="img" aria-label="환율 추이 그래프"></svg><div class="chart-dates"><span id="chartStartDate">—</span><span id="chartEndDate">오늘</span></div></section>
         </section>
 
         <section class="summary-grid" aria-label="이번 달 요약">
@@ -56,6 +56,7 @@
     <div class="modal-backdrop" id="currencyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
       <section class="currency-modal"><span class="modal-symbol">◎</span><p class="eyebrow">WELCOME TO WANDERWALLET</p><h2 id="modalTitle">기록 기준 통화를<br />정해 주세요.</h2><p>모든 지출은 이 통화로 환산되어 기록돼요.<br />유럽 생활비는 EUR로, 한국 지출은 KRW로 입력해도 괜찮아요.</p><label>기준 통화<select id="baseCurrencySelect"><option value="EUR">EUR · 유로 (€)</option><option value="KRW">KRW · 대한민국 원 (₩)</option><option value="USD">USD · 미국 달러 ($)</option><option value="JPY">JPY · 일본 엔 (¥)</option></select></label><button class="primary-button" id="saveBaseCurrency" type="button">이 통화로 시작하기</button><small id="baseChangeWarning"></small></section>
     </div>
-    <script src="app.js?v=20260825-14"></script>
+    <div class="modal-backdrop report-backdrop" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportTitle" hidden><section class="report-modal"><header><div><p class="eyebrow">MONTHLY OVERVIEW</p><h2 id="reportTitle">월별 지출 리포트</h2></div><button id="closeReport" class="close-report" type="button" aria-label="리포트 닫기">×</button></header><label class="report-month-label">보고서 월<select id="reportMonthSelect"></select></label><div class="report-stats"><article><span>총 지출</span><strong id="reportTotal">—</strong></article><article><span>최다 지출 항목</span><strong id="reportTopCategory">—</strong><small id="reportTopAmount">—</small></article><article><span>기록한 지출</span><strong id="reportCount">0건</strong></article></div><section class="report-breakdown"><p class="eyebrow">CATEGORY BREAKDOWN</p><h3>항목별 지출</h3><div id="reportCategoryList"></div></section></section></div>
+    <script src="app.js?v=20260825-15"></script>
   </body>
 </html>
