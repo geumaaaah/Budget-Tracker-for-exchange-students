@@ -13,6 +13,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .eyebrow{color:var(--orange);font:500 10px 'DM Mono';letter-spacing:1.4px;margin:0 0 10px}
 .hero h1{font:800 clamp(38px,4.3vw,61px)/1.14 'Nanum Myeongjo',serif;letter-spacing:-3px;margin:0}
 .hero h1 em{font-style:normal;color:var(--orange)}
+.hero h1 .trip-word{color:var(--orange)}.hero h1 .tally-word{color:var(--ink)}
 .intro{color:var(--muted);line-height:1.7;font-size:14px;margin:23px 0 0}
 .hero-stamp{width:132px;height:132px;border:1px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;gap:6px;transform:rotate(12deg);font:500 10px/1.2 'DM Mono';text-align:center}
 .hero-stamp span:first-child,.hero-stamp span:last-child{font-size:16px;color:var(--orange)}
