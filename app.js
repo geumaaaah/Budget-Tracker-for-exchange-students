@@ -9,15 +9,18 @@ let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate
 
 expenses=expenses.map(x=>({...(x.baseAmount===undefined?{...x,inputAmount:x.amount,inputCurrency:baseCurrency||'KRW',baseAmount:x.amount}:x),categories:x.categories||[x.category||'식비'],createdAt:x.createdAt||new Date().toISOString()}));
 
-const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:['EUR','USD'].includes(c)?2:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,allCategories=()=>categoryOrder;
+const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:['EUR','USD'].includes(c)?2:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,formatBudget=x=>`${symbols[baseCurrency]||''}${new Intl.NumberFormat('ko-KR',{maximumFractionDigits:0}).format(Math.round(x))}`,allCategories=()=>categoryOrder;
 
 const save=()=>localStorage.setItem(dataKey,JSON.stringify(expenses));
 
-document.querySelector('#todayLabel').textContent=`${today.getMonth()+1}월 ${today.getDate()}일`;
+const expenseDate=document.querySelector('#expenseDate'),toDateValue=date=>date.toISOString().slice(0,10);
+expenseDate.value=toDateValue(today);
+function syncExpenseDate(){const date=new Date(selectedMonth.getFullYear(),selectedMonth.getMonth(),Math.min(today.getDate(),new Date(selectedMonth.getFullYear(),selectedMonth.getMonth()+1,0).getDate()));expenseDate.value=toDateValue(date)}
 function renderMonthLabel(){document.querySelector('#monthLabel').textContent=`${selectedMonth.getFullYear()}년 ${selectedMonth.getMonth()+1}월`}
 renderMonthLabel();
-document.querySelector('#prevMonth').onclick=()=>{selectedMonth.setMonth(selectedMonth.getMonth()-1);renderMonthLabel();render()};
-document.querySelector('#nextMonth').onclick=()=>{selectedMonth.setMonth(selectedMonth.getMonth()+1);renderMonthLabel();render()};
+document.querySelector('#prevMonth').onclick=()=>{selectedMonth.setMonth(selectedMonth.getMonth()-1);syncExpenseDate();renderMonthLabel();render()};
+document.querySelector('#nextMonth').onclick=()=>{selectedMonth.setMonth(selectedMonth.getMonth()+1);syncExpenseDate();renderMonthLabel();render()};
+expenseDate.onchange=()=>{const date=new Date(`${expenseDate.value}T12:00:00`);if(Number.isNaN(date.getTime()))return;selectedMonth=new Date(date.getFullYear(),date.getMonth(),1);renderMonthLabel();render()};
 
 function restoreCachedRates(){const cache=JSON.parse(localStorage.getItem(rateCacheKey)||'null');
 if(cache?.base===baseCurrency&&cache.rates){rates=cache.rates;
@@ -47,19 +50,21 @@ el.textContent=x===null?'환율을 빠르게 불러오는 중이에요…':`${sy
 async function loadExchangeGraph(){const from=document.querySelector('#graphBase').value,to=document.querySelector('#graphQuote').value,value=document.querySelector('#exchangeRateValue'),svg=document.querySelector('#exchangeChart');if(from===to){value.textContent=`1 ${from} = 1 ${to}`;svg.innerHTML='<path class="chart-line" d="M 5 52 L 325 52" />';return}value.textContent='환율 불러오는 중…';const end=new Date(),start=new Date();start.setDate(end.getDate()-30);const date=x=>x.toISOString().slice(0,10);try{const response=await fetch(`https://api.frankfurter.dev/v1/${date(start)}..${date(end)}?base=${from}&symbols=${to}`),data=await response.json(),entries=Object.entries(data.rates).map(([day,rate])=>({day,value:rate[to]}));if(!entries.length)throw Error();const values=entries.map(x=>x.value),min=Math.min(...values),max=Math.max(...values),range=max-min||1,points=entries.map((x,i)=>{const px=8+i/(entries.length-1||1)*314,py=91-(x.value-min)/range*76;return [px,py]}),line=points.map((p,i)=>`${i?'L':'M'} ${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' '),area=`M ${points[0][0]} 97 ${points.map(p=>`L ${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ')} L ${points.at(-1)[0]} 97 Z`,latest=entries.at(-1);value.textContent=`1 ${from} = ${money(latest.value,to)} ${to}`;document.querySelector('#exchangeRateDate').textContent=`${latest.day} 기준 · 최근 30일`;document.querySelector('#chartStartDate').textContent=entries[0].day.slice(5).replace('-','.');document.querySelector('#chartEndDate').textContent=latest.day.slice(5).replace('-','.');svg.innerHTML=`<path class="chart-area" d="${area}"/><path class="chart-line" d="${line}"/><circle class="chart-dot" cx="${points.at(-1)[0]}" cy="${points.at(-1)[1]}" r="3.5"/>`}catch{value.textContent='환율을 불러오지 못했어요';svg.innerHTML=''}}
 function esc(x){return x.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function renderCategories(){document.querySelector('#categoryOptions').innerHTML=allCategories().map((x,i)=>`<label class="category-option" draggable="true" data-category="${esc(x)}"><input type="checkbox" name="expenseCategory" value="${esc(x)}" ${i===0?'checked':''}><span>${esc(x)}</span></label>`).join('')}
-function render(){const monthExpenses=expenses.filter(x=>{const date=new Date(x.createdAt);return date.getFullYear()===selectedMonth.getFullYear()&&date.getMonth()===selectedMonth.getMonth()}),total=monthExpenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:monthExpenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),top=[...grouped].sort((a,b)=>b.value-a.value)[0],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(selectedMonth.getFullYear(),selectedMonth.getMonth()+1,0).getDate(),isCurrentMonth=selectedMonth.getFullYear()===today.getFullYear()&&selectedMonth.getMonth()===today.getMonth(),monthProgress=isCurrentMonth?Math.round(today.getDate()/daysInMonth*100):selectedMonth<today?100:0;
+function render(){const monthExpenses=expenses.filter(x=>{const date=new Date(x.createdAt);return date.getFullYear()===selectedMonth.getFullYear()&&date.getMonth()===selectedMonth.getMonth()}),total=monthExpenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:monthExpenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),ranking=[...grouped].sort((a,b)=>b.value-a.value),top=ranking[0],second=ranking[1],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(selectedMonth.getFullYear(),selectedMonth.getMonth()+1,0).getDate(),isCurrentMonth=selectedMonth.getFullYear()===today.getFullYear()&&selectedMonth.getMonth()===today.getMonth(),monthProgress=isCurrentMonth?Math.round(today.getDate()/daysInMonth*100):selectedMonth<today?100:0;
 document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
 document.querySelector('#totalSpend').textContent=format(total);
 const totalKrw=baseCurrency==='KRW'?total:rates?.KRW?total*rates.KRW:null;
 document.querySelector('#totalSpendKrw').textContent=totalKrw===null?'원화 환산 중…':`₩${money(totalKrw,'KRW')}`;
 document.querySelector('#chartTotal').textContent=format(total);
-document.querySelector('#budgetAmount').textContent=budget?format(budget):'예산 미설정';
+document.querySelector('#budgetAmount').textContent=budget?formatBudget(budget):'예산 미설정';
 document.querySelector('#budgetProgress').style.width=`${ratio}%`;
 document.querySelector('#budgetStatus').textContent=budget?`예산의 ${Math.round(total/budget*100)}%를 사용했어요`:'수정 버튼으로 예산을 설정하세요';
 document.querySelector('#monthStatus').textContent=`이번 달이 ${monthProgress}% 지났어요`;
 document.querySelector('#monthProgress').style.width=`${monthProgress}%`;
 document.querySelector('#topCategory').textContent=top?top.name:'—';
 document.querySelector('#topCategoryAmount').textContent=top?`${format(top.value)} 지출`:'지출을 기록해 보세요';
+document.querySelector('#secondCategory').textContent=second?second.name:'—';
+document.querySelector('#secondCategoryAmount').textContent=second?`${format(second.value)} 지출`:'—';
 let p=0;
 document.querySelector('#donut').style.background=grouped.length?`conic-gradient(${grouped.map(x=>{let a=p;
 p+=x.value/total*100;
@@ -91,7 +96,7 @@ document.querySelector('#reportMonthSelect').onchange=renderReport;
 document.querySelector('#graphBase').onchange=loadExchangeGraph;
 document.querySelector('#graphQuote').onchange=loadExchangeGraph;
 
-function saveBudget(){const amount=document.querySelector('#budgetAmount'),value=Number(amount.textContent.replace(/[^0-9.]/g,''));if(!value)return alert('올바른 예산 금액을 입력해 주세요.');budget=value;localStorage.setItem(budgetKey,budget);amount.contentEditable='false';document.querySelector('#editBudget').textContent='수정';render()}
+function saveBudget(){const amount=document.querySelector('#budgetAmount'),value=Number(amount.textContent.replace(/[^0-9.]/g,''));if(!value)return alert('올바른 예산 금액을 입력해 주세요.');budget=Math.round(value);localStorage.setItem(budgetKey,budget);amount.contentEditable='false';document.querySelector('#editBudget').textContent='수정';render()}
 document.querySelector('#editBudget').onclick=()=>{const amount=document.querySelector('#budgetAmount');if(amount.contentEditable==='true')return saveBudget();amount.textContent=budget||'';amount.contentEditable='true';document.querySelector('#editBudget').textContent='저장';amount.focus()};
 document.querySelector('#budgetAmount').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveBudget()}};
 
@@ -116,12 +121,13 @@ document.querySelector('#inputCurrency').onchange=note;
 
 document.querySelector('#expenseForm').onsubmit=e=>{e.preventDefault();
 if(!baseCurrency)return openModal();
-const amount=Number(document.querySelector('#expenseAmount').value),inputCurrency=document.querySelector('#inputCurrency').value,baseAmount=convert(amount,inputCurrency),selected=[...document.querySelectorAll('input[name="expenseCategory"]:checked')].map(x=>x.value);
+const amount=Number(document.querySelector('#expenseAmount').value),inputCurrency=document.querySelector('#inputCurrency').value,baseAmount=convert(amount,inputCurrency),selected=[...document.querySelectorAll('input[name="expenseCategory"]:checked')].map(x=>x.value),selectedDate=new Date(`${expenseDate.value}T12:00:00`);
 if(baseAmount===null){loadRates();
 return note('환율을 불러오는 중이에요. 잠시 후 다시 추가해 주세요.')}if(!selected.length)return alert('지출 항목을 하나 이상 선택해 주세요.');
-expenses.push({id:Date.now(),name:document.querySelector('#expenseName').value.trim(),inputAmount:amount,inputCurrency,baseAmount,categories:selected,date:`${today.getMonth()+1}/${today.getDate()}`,createdAt:today.toISOString(),rateDate});
+expenses.push({id:Date.now(),name:document.querySelector('#expenseName').value.trim(),inputAmount:amount,inputCurrency,baseAmount,categories:selected,date:`${selectedDate.getMonth()+1}/${selectedDate.getDate()}`,createdAt:selectedDate.toISOString(),rateDate});
 save();
 e.target.reset();
+expenseDate.value=toDateValue(selectedDate);
 renderCategories();
 render()};
 
