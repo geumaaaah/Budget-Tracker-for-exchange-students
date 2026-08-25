@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260825-2" />
+    <link rel="stylesheet" href="styles.css?v=20260825-3" />
   </head>
   <body>
     <div class="app-shell">
@@ -22,14 +22,14 @@
 
       <main id="top">
         <section class="hero">
-          <div><p class="eyebrow">YOUR MONTHLY SPEND</p><h1><span class="trip-word">Trip</span> <span class="tally-word">Tally</span></h1><p class="intro">낯선 도시에서의 매일을 기록해보세요.</p></div>
+          <div><h1><span class="trip-word">Trip</span> <span class="tally-word">Tally</span></h1><p class="intro">낯선 도시에서의 매일을 기록해보세요.</p></div>
           <div class="hero-stamp" aria-hidden="true"><span>✦</span><span>NEW<br />MEMORIES</span><span>✦</span></div>
         </section>
 
         <section class="summary-grid" aria-label="이번 달 요약">
           <article class="summary-card total"><p>이번 달 지출</p><strong id="totalSpend">₩0</strong><span id="entryCount">아직 기록된 지출이 없어요</span></article>
           <article class="summary-card"><p>가장 많이 쓴 항목</p><strong id="topCategory">—</strong><span id="topCategoryAmount">지출을 기록해 보세요</span></article>
-          <article class="summary-card budget"><div class="budget-title"><p>이번 달 예산</p><button id="editBudget" type="button">수정</button></div><strong id="budgetAmount">—</strong><form id="budgetForm" class="budget-form" hidden><input id="budgetInput" type="number" min="0" step="0.01" required /><button type="submit">저장</button></form><div class="progress"><i id="budgetProgress"></i></div><span id="budgetStatus">예산을 설정해 보세요</span></article>
+          <article class="summary-card budget"><p>이번 달 예산</p><div id="budgetValue" class="budget-value"><strong id="budgetAmount">—</strong><button id="editBudget" type="button">수정</button></div><form id="budgetForm" class="budget-form" hidden><input id="budgetInput" type="number" min="0" step="0.01" required /><button type="submit">저장</button></form><div class="progress"><i id="budgetProgress"></i></div><span id="budgetStatus">예산을 설정해 보세요</span></article>
         </section>
 
         <section class="content-grid">
@@ -56,6 +56,6 @@
     <div class="modal-backdrop" id="currencyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <section class="currency-modal"><span class="modal-symbol">◎</span><p class="eyebrow">WELCOME TO WANDERWALLET</p><h2 id="modalTitle">기록 기준 통화를<br />정해 주세요.</h2><p>모든 지출은 이 통화로 환산되어 기록돼요.<br />유럽 생활비는 EUR로, 한국 지출은 KRW로 입력해도 괜찮아요.</p><label>기준 통화<select id="baseCurrencySelect"><option value="EUR">EUR · 유로 (€)</option><option value="KRW">KRW · 대한민국 원 (₩)</option><option value="USD">USD · 미국 달러 ($)</option><option value="JPY">JPY · 일본 엔 (¥)</option></select></label><button class="primary-button" id="saveBaseCurrency" type="button">이 통화로 시작하기</button><small id="baseChangeWarning"></small></section>
     </div>
-    <script src="app.js?v=20260825-6"></script>
+    <script src="app.js?v=20260825-7"></script>
   </body>
 </html>

@@ -14,19 +14,19 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',san
 .hero h1{font:800 clamp(42px,4.3vw,61px)/1.05 'DM Sans',sans-serif;letter-spacing:-3px;margin:0}
 .hero h1 em{font-style:normal;color:var(--orange)}
 .hero h1 .trip-word{color:var(--orange)}.hero h1 .tally-word{color:var(--ink)}
-.intro{color:var(--muted);line-height:1.45;font-size:clamp(20px,2.1vw,30px);letter-spacing:-1.2px;margin:23px 0 0}
+.intro{color:var(--ink);line-height:1.45;font-size:clamp(20px,2.1vw,30px);letter-spacing:-1.2px;margin:23px 0 0}
 .hero-stamp{width:132px;height:132px;border:1px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;gap:6px;transform:rotate(12deg);font:500 10px/1.2 'DM Mono';text-align:center}
 .hero-stamp span:first-child,.hero-stamp span:last-child{font-size:16px;color:var(--orange)}
 .summary-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
 .summary-card{padding:25px 30px 24px;border-left:1px solid var(--line)}
 .summary-card:first-child{border-left:0}
-.summary-card p{font:500 10px 'DM Mono';letter-spacing:1.2px;margin:0 0 12px;color:var(--muted)}
+.summary-card p{font:600 14px 'DM Sans';letter-spacing:-.4px;margin:0 0 12px;color:var(--ink)}
 .summary-card strong{display:block;font-size:24px;letter-spacing:-1px;margin-bottom:7px}
 .summary-card.total strong{font-size:31px;color:var(--orange)}
-.summary-card span{font-size:12px;color:var(--muted)}
+.summary-card span{font-size:14px;color:var(--muted)}
 .progress{height:4px;background:#e5e1d7;margin:13px 0 8px;overflow:hidden}
 .progress i{display:block;height:100%;width:0;background:var(--orange);transition:width .35s}
-.budget-title{display:flex;align-items:flex-start;justify-content:space-between}.budget-title button,.category-label button{border:0;background:transparent;color:var(--orange);font:11px 'DM Sans';cursor:pointer;padding:0}.budget-form{display:flex;gap:8px;margin:2px 0}.budget-form input{margin:0;padding:4px 0}.budget-form button{border:0;background:var(--ink);color:white;font:11px 'DM Sans';padding:5px 8px;cursor:pointer}
+.budget-value{display:flex;align-items:baseline;gap:10px}.budget-value button,.category-label button{border:0;background:transparent;color:var(--orange);font:12px 'DM Sans';cursor:pointer;padding:0}.budget-form{display:flex;gap:8px;margin:2px 0}.budget-form input{margin:0;padding:4px 0}.budget-form button{border:0;background:var(--ink);color:white;font:11px 'DM Sans';padding:5px 8px;cursor:pointer}
 .content-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(300px,.83fr);gap:25px;padding:34px 0 61px}
 .left-column,.right-column{display:flex;flex-direction:column;gap:25px}
 .panel{background:var(--card);border:1px solid var(--line);padding:27px 29px}

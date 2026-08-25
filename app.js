@@ -1,24 +1,115 @@
 const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories';
+
 const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48','#8fc6b1','#92b5d5','#b8a5d4','#b4aca0'],icons={식비:'☕',교통:'◈',생활:'⌂',여행:'✦',학업:'✎',기타:'○'},categories=['식비','교통','생활','여행','학업','기타'];
+
 let baseCurrency=localStorage.getItem(baseKey)||localStorage.getItem(legacyKey)||'';
+
 let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]');
+
 expenses=expenses.map(x=>({...(x.baseAmount===undefined?{...x,inputAmount:x.amount,inputCurrency:baseCurrency||'KRW',baseAmount:x.amount}:x),categories:x.categories||[x.category||'식비']}));
+
 const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:['EUR','USD'].includes(c)?2:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,allCategories=()=>[...categories,...customCategories];
+
 const save=()=>localStorage.setItem(dataKey,JSON.stringify(expenses));
-document.querySelector('#todayLabel').textContent=`${today.getMonth()+1}월 ${today.getDate()}일`;document.querySelector('#monthLabel').textContent=`${today.getFullYear()}년 ${today.getMonth()+1}월`;
-function restoreCachedRates(){const cache=JSON.parse(localStorage.getItem(rateCacheKey)||'null');if(cache?.base===baseCurrency&&cache.rates){rates=cache.rates;rateDate=cache.date;return true}rates=null;rateDate='';return false}
-function fetchWithTimeout(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),2500);return fetch(url,{signal:controller.signal}).then(r=>{if(!r.ok)throw Error();return r.json()}).finally(()=>clearTimeout(timer))}
-function loadRates(){if(!baseCurrency)return;restoreCachedRates();const list='KRW,USD,EUR,JPY',a=fetchWithTimeout(`https://api.frankfurter.app/latest?from=${baseCurrency}&to=${list}`).then(d=>({rates:{...d.rates,[baseCurrency]:1},date:d.date})),b=fetchWithTimeout(`https://open.er-api.com/v6/latest/${baseCurrency}`).then(d=>({rates:{KRW:d.rates.KRW,USD:d.rates.USD,EUR:d.rates.EUR,JPY:d.rates.JPY,[baseCurrency]:1},date:new Date(d.time_last_update_unix*1000).toISOString().slice(0,10)}));rateRequest=Promise.any([a,b]).then(r=>{rates=r.rates;rateDate=r.date;localStorage.setItem(rateCacheKey,JSON.stringify({base:baseCurrency,rates,date:rateDate}));note()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'));return rateRequest}
-function convert(amount,input){const x=input===baseCurrency?amount:rates?.[input]?amount/rates[input]:null;return x===null?null:['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
-function note(error=''){const amount=Number(document.querySelector('#expenseAmount').value),input=document.querySelector('#inputCurrency').value,el=document.querySelector('#conversionNote');if(error){el.textContent=error;return}if(!baseCurrency){el.textContent='기준 통화를 설정하면 환산 금액을 보여드려요.';return}if(!amount){el.textContent=`입력 금액은 ${symbols[baseCurrency]} ${baseCurrency} 기준으로 기록돼요.`;return}const x=convert(amount,input);el.textContent=x===null?'환율을 빠르게 불러오는 중이에요…':`${symbols[input]}${money(amount,input)} → ${format(x)}${rateDate?` · ${rateDate} 기준 환율`:''}`}
+
+document.querySelector('#todayLabel').textContent=`${today.getMonth()+1}월 ${today.getDate()}일`;
+document.querySelector('#monthLabel').textContent=`${today.getFullYear()}년 ${today.getMonth()+1}월`;
+
+function restoreCachedRates(){const cache=JSON.parse(localStorage.getItem(rateCacheKey)||'null');
+if(cache?.base===baseCurrency&&cache.rates){rates=cache.rates;
+rateDate=cache.date;
+return true}rates=null;
+rateDate='';
+return false}
+function fetchWithTimeout(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),2500);
+return fetch(url,{signal:controller.signal}).then(r=>{if(!r.ok)throw Error();
+return r.json()}).finally(()=>clearTimeout(timer))}
+function loadRates(){if(!baseCurrency)return;
+restoreCachedRates();
+const list='KRW,USD,EUR,JPY',a=fetchWithTimeout(`https://api.frankfurter.app/latest?from=${baseCurrency}&to=${list}`).then(d=>({rates:{...d.rates,[baseCurrency]:1},date:d.date})),b=fetchWithTimeout(`https://open.er-api.com/v6/latest/${baseCurrency}`).then(d=>({rates:{KRW:d.rates.KRW,USD:d.rates.USD,EUR:d.rates.EUR,JPY:d.rates.JPY,[baseCurrency]:1},date:new Date(d.time_last_update_unix*1000).toISOString().slice(0,10)}));
+rateRequest=Promise.any([a,b]).then(r=>{rates=r.rates;
+rateDate=r.date;
+localStorage.setItem(rateCacheKey,JSON.stringify({base:baseCurrency,rates,date:rateDate}));
+note()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'));
+return rateRequest}
+function convert(amount,input){const x=input===baseCurrency?amount:rates?.[input]?amount/rates[input]:null;
+return x===null?null:['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
+function note(error=''){const amount=Number(document.querySelector('#expenseAmount').value),input=document.querySelector('#inputCurrency').value,el=document.querySelector('#conversionNote');
+if(error){el.textContent=error;
+return}if(!baseCurrency){el.textContent='기준 통화를 설정하면 환산 금액을 보여드려요.';
+return}if(!amount){el.textContent=`입력 금액은 ${symbols[baseCurrency]} ${baseCurrency} 기준으로 기록돼요.`;
+return}const x=convert(amount,input);
+el.textContent=x===null?'환율을 빠르게 불러오는 중이에요…':`${symbols[input]}${money(amount,input)} → ${format(x)}${rateDate?` · ${rateDate} 기준 환율`:''}`}
 function esc(x){return x.replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function renderCategories(){document.querySelector('#categoryOptions').innerHTML=allCategories().map((x,i)=>`<label class="category-option"><input type="checkbox" name="expenseCategory" value="${esc(x)}" ${i===0?'checked':''}><span>${esc(x)}</span></label>`).join('')}
-function render(){const total=expenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:expenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),top=[...grouped].sort((a,b)=>b.value-a.value)[0],ratio=budget?Math.min(total/budget*100,100):0;document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';document.querySelector('#totalSpend').textContent=format(total);document.querySelector('#chartTotal').textContent=format(total);document.querySelector('#entryCount').textContent=expenses.length?`${expenses.length}건 · 모두 ${baseCurrency}로 환산 기록`:'아직 기록된 지출이 없어요';document.querySelector('#budgetAmount').textContent=budget?format(budget):'예산 미설정';document.querySelector('#budgetProgress').style.width=`${ratio}%`;document.querySelector('#budgetStatus').textContent=budget?`예산의 ${Math.round(total/budget*100)}%를 사용했어요`:'수정 버튼으로 이번 달 예산을 설정하세요';document.querySelector('#topCategory').textContent=top?top.name:'—';document.querySelector('#topCategoryAmount').textContent=top?`${format(top.value)} 지출`:'지출을 기록해 보세요';let p=0;document.querySelector('#donut').style.background=grouped.length?`conic-gradient(${grouped.map(x=>{let a=p;p+=x.value/total*100;return `${x.color} ${a}% ${p}%`}).join(',')})`:'#ebe7dd';document.querySelector('#legend').innerHTML=grouped.length?grouped.map(x=>`<div class="legend-item"><span class="legend-left"><i class="legend-dot" style="background:${x.color}"></i>${x.name}</span><span class="legend-price">${format(x.value)}</span></div>`).join(''):'<div class="empty-state">카테고리 분석은 지출을 추가한 뒤 표시돼요.</div>';document.querySelector('#expenseList').innerHTML=expenses.length?[...expenses].reverse().map(x=>`<div class="expense-item"><span class="category-icon" style="background:${colors[allCategories().indexOf(x.categories[0])%colors.length]}33">${icons[x.categories[0]]||'•'}</span><div><div class="expense-name">${esc(x.name)}</div><div class="expense-meta">${esc(x.categories.join(' · '))} · ${x.date} · ${symbols[x.inputCurrency]}${money(x.inputAmount,x.inputCurrency)}</div></div><span class="expense-price">${format(x.baseAmount)}</span><button class="delete-button" data-id="${x.id}">×</button></div>`).join(''):'<div class="empty-state">아직 기록이 없어요. 첫 지출을 추가해 보세요.</div>';document.querySelector('#tipText').textContent=!top?'기록을 시작하면 맞춤 팁을 드릴게요.':`${top.name} 항목이 가장 커요. 다음 소비 전 한 번 더 살펴보세요.`;note()}
-function openModal(){document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';document.querySelector('#currencyModal').hidden=false}
-document.querySelector('#settingsButton').onclick=openModal;document.querySelector('#saveBaseCurrency').onclick=()=>{baseCurrency=document.querySelector('#baseCurrencySelect').value;localStorage.setItem(baseKey,baseCurrency);document.querySelector('#currencyModal').hidden=true;restoreCachedRates();render();loadRates()};
-document.querySelector('#editBudget').onclick=()=>{document.querySelector('#budgetInput').value=budget||'';document.querySelector('#budgetForm').hidden=false;document.querySelector('#budgetInput').focus()};document.querySelector('#budgetForm').onsubmit=e=>{e.preventDefault();budget=Number(document.querySelector('#budgetInput').value);localStorage.setItem(budgetKey,budget);e.target.hidden=true;render()};
-document.querySelector('#addCategory').onclick=()=>{const name=prompt('새 지출 항목 이름을 입력하세요.');if(!name?.trim()||allCategories().includes(name.trim()))return;customCategories.push(name.trim());localStorage.setItem(customCategoryKey,JSON.stringify(customCategories));renderCategories()};
-document.querySelector('#expenseAmount').oninput=note;document.querySelector('#inputCurrency').onchange=note;
-document.querySelector('#expenseForm').onsubmit=e=>{e.preventDefault();if(!baseCurrency)return openModal();const amount=Number(document.querySelector('#expenseAmount').value),inputCurrency=document.querySelector('#inputCurrency').value,baseAmount=convert(amount,inputCurrency),selected=[...document.querySelectorAll('input[name="expenseCategory"]:checked')].map(x=>x.value);if(baseAmount===null){loadRates();return note('환율을 불러오는 중이에요. 잠시 후 다시 추가해 주세요.')}if(!selected.length)return alert('지출 항목을 하나 이상 선택해 주세요.');expenses.push({id:Date.now(),name:document.querySelector('#expenseName').value.trim(),inputAmount:amount,inputCurrency,baseAmount,categories:selected,date:`${today.getMonth()+1}/${today.getDate()}`,rateDate});save();e.target.reset();renderCategories();render()};
-document.querySelector('#expenseList').onclick=e=>{if(e.target.dataset.id){expenses=expenses.filter(x=>x.id!==Number(e.target.dataset.id));save();render()}};document.querySelector('#clearButton').onclick=()=>{if(expenses.length&&confirm('모든 지출 기록을 삭제할까요?')){expenses=[];save();render()}};
-renderCategories();if(!baseCurrency)openModal();else{render();loadRates()}
+function render(){const total=expenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:expenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),top=[...grouped].sort((a,b)=>b.value-a.value)[0],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(today.getFullYear(),today.getMonth()+1,0).getDate(),monthProgress=Math.round(today.getDate()/daysInMonth*100);
+document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
+document.querySelector('#totalSpend').textContent=format(total);
+document.querySelector('#chartTotal').textContent=format(total);
+document.querySelector('#entryCount').textContent=expenses.length?`${expenses.length}건 · 모두 ${baseCurrency}로 환산 기록`:'아직 기록된 지출이 없어요';
+document.querySelector('#budgetAmount').textContent=budget?format(budget):'예산 미설정';
+document.querySelector('#budgetProgress').style.width=`${ratio}%`;
+document.querySelector('#budgetStatus').textContent=budget?`예산의 ${Math.round(total/budget*100)}%를 사용했어요 · 이번 달이 ${monthProgress}% 지났어요`:`이번 달이 ${monthProgress}% 지났어요 · 수정 버튼으로 예산을 설정하세요`;
+document.querySelector('#topCategory').textContent=top?top.name:'—';
+document.querySelector('#topCategoryAmount').textContent=top?`${format(top.value)} 지출`:'지출을 기록해 보세요';
+let p=0;
+document.querySelector('#donut').style.background=grouped.length?`conic-gradient(${grouped.map(x=>{let a=p;
+p+=x.value/total*100;
+return `${x.color} ${a}% ${p}%`}).join(',')})`:'#ebe7dd';
+document.querySelector('#legend').innerHTML=grouped.length?grouped.map(x=>`<div class="legend-item"><span class="legend-left"><i class="legend-dot" style="background:${x.color}"></i>${x.name}</span><span class="legend-price">${format(x.value)}</span></div>`).join(''):'<div class="empty-state">카테고리 분석은 지출을 추가한 뒤 표시돼요.</div>';
+document.querySelector('#expenseList').innerHTML=expenses.length?[...expenses].reverse().map(x=>`<div class="expense-item"><span class="category-icon" style="background:${colors[allCategories().indexOf(x.categories[0])%colors.length]}33">${icons[x.categories[0]]||'•'}</span><div><div class="expense-name">${esc(x.name)}</div><div class="expense-meta">${esc(x.categories.join(' · '))} · ${x.date} · ${symbols[x.inputCurrency]}${money(x.inputAmount,x.inputCurrency)}</div></div><span class="expense-price">${format(x.baseAmount)}</span><button class="delete-button" data-id="${x.id}">×</button></div>`).join(''):'<div class="empty-state">아직 기록이 없어요. 첫 지출을 추가해 보세요.</div>';
+document.querySelector('#tipText').textContent=!top?'기록을 시작하면 맞춤 팁을 드릴게요.':`${top.name} 항목이 가장 커요. 다음 소비 전 한 번 더 살펴보세요.`;
+note()}
+function openModal(){document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';
+document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
+document.querySelector('#currencyModal').hidden=false}
+document.querySelector('#settingsButton').onclick=openModal;
+document.querySelector('#saveBaseCurrency').onclick=()=>{baseCurrency=document.querySelector('#baseCurrencySelect').value;
+localStorage.setItem(baseKey,baseCurrency);
+document.querySelector('#currencyModal').hidden=true;
+restoreCachedRates();
+render();
+loadRates()};
+
+document.querySelector('#editBudget').onclick=()=>{document.querySelector('#budgetInput').value=budget||'';
+document.querySelector('#budgetValue').hidden=true;
+document.querySelector('#budgetForm').hidden=false;
+document.querySelector('#budgetInput').focus()};
+document.querySelector('#budgetForm').onsubmit=e=>{e.preventDefault();
+budget=Number(document.querySelector('#budgetInput').value);
+localStorage.setItem(budgetKey,budget);
+e.target.hidden=true;
+document.querySelector('#budgetValue').hidden=false;
+render()};
+
+document.querySelector('#addCategory').onclick=()=>{const name=prompt('새 지출 항목 이름을 입력하세요.');
+if(!name?.trim()||allCategories().includes(name.trim()))return;
+customCategories.push(name.trim());
+localStorage.setItem(customCategoryKey,JSON.stringify(customCategories));
+renderCategories()};
+
+document.querySelector('#expenseAmount').oninput=note;
+document.querySelector('#inputCurrency').onchange=note;
+
+document.querySelector('#expenseForm').onsubmit=e=>{e.preventDefault();
+if(!baseCurrency)return openModal();
+const amount=Number(document.querySelector('#expenseAmount').value),inputCurrency=document.querySelector('#inputCurrency').value,baseAmount=convert(amount,inputCurrency),selected=[...document.querySelectorAll('input[name="expenseCategory"]:checked')].map(x=>x.value);
+if(baseAmount===null){loadRates();
+return note('환율을 불러오는 중이에요. 잠시 후 다시 추가해 주세요.')}if(!selected.length)return alert('지출 항목을 하나 이상 선택해 주세요.');
+expenses.push({id:Date.now(),name:document.querySelector('#expenseName').value.trim(),inputAmount:amount,inputCurrency,baseAmount,categories:selected,date:`${today.getMonth()+1}/${today.getDate()}`,rateDate});
+save();
+e.target.reset();
+renderCategories();
+render()};
+
+document.querySelector('#expenseList').onclick=e=>{if(e.target.dataset.id){expenses=expenses.filter(x=>x.id!==Number(e.target.dataset.id));
+save();
+render()}};
+document.querySelector('#clearButton').onclick=()=>{if(expenses.length&&confirm('모든 지출 기록을 삭제할까요?')){expenses=[];
+save();
+render()}};
+
+renderCategories();
+if(!baseCurrency)openModal();
+else{render();
+loadRates()}
