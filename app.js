@@ -1,8 +1,8 @@
-const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories',categoryOrderKey='wander-wallet-category-order',onboardingKey='wander-wallet-onboarding-complete';
+const dataKey='wander-wallet-expenses',baseKey='wander-wallet-base-currency',legacyKey='wander-wallet-currency',rateCacheKey='wander-wallet-rate-cache',budgetKey='wander-wallet-budget',customCategoryKey='wander-wallet-custom-categories',categoryOrderKey='wander-wallet-category-order',onboardingKey='wander-wallet-onboarding-complete',travelCurrencyKey='wander-wallet-travel-currency';
 
 const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48','#8fc6b1','#92b5d5','#b8a5d4','#b4aca0'],icons={식비:'☕',교통:'◈',생활:'⌂',여행:'✦',학업:'✎',기타:'○'},defaultCategories=['식비','교통','생활','여행','학업','기타'];
 
-let baseCurrency=localStorage.getItem(baseKey)||localStorage.getItem(legacyKey)||'';
+let baseCurrency=localStorage.getItem(baseKey)||localStorage.getItem(legacyKey)||'',travelCurrency=localStorage.getItem(travelCurrencyKey)||baseCurrency||'EUR';
 let selectedMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
 let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]'),categoryOrder=JSON.parse(localStorage.getItem(categoryOrderKey)||'null')||[...defaultCategories,...customCategories];
@@ -16,6 +16,7 @@ save();
 
 const expenseDate=document.querySelector('#expenseDate'),toDateValue=date=>date.toISOString().slice(0,10);
 expenseDate.value=toDateValue(today);
+document.querySelector('#inputCurrency').value=travelCurrency;
 function syncExpenseDate(){const date=new Date(selectedMonth.getFullYear(),selectedMonth.getMonth(),Math.min(today.getDate(),new Date(selectedMonth.getFullYear(),selectedMonth.getMonth()+1,0).getDate()));expenseDate.value=toDateValue(date)}
 function renderMonthLabel(){document.querySelector('#monthLabel').textContent=`${selectedMonth.getFullYear()}년 ${selectedMonth.getMonth()+1}월`}
 renderMonthLabel();
@@ -76,13 +77,17 @@ const budgetGap=budget?Math.round(total/budget*100)-monthProgress:null;
 document.querySelector('#tipText').innerHTML=budgetGap===null?'예산을 설정하면 소비 속도를 비교해 드릴게요.':budgetGap<-10?'여행은 즐기고, 예산은 아끼고 있어요.<br>지금 페이스라면 이번 달도 든든해요.':Math.abs(budgetGap)<=10?'여행도 즐기고, 예산도 잘 맞춰가고 있어요.<br>지금 페이스라면 이번 달도 안정적이에요.':'여행은 충분히 즐기고 있어요.<br>다만 예산이 빠르게 줄고 있어 남은 일정은 지출 조절이 필요해요.';
 note()}
 function openModal(){document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';
+document.querySelector('#travelCurrencySelect').value=travelCurrency;
 document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
 document.querySelector('#currencyModal').hidden=false}
 document.querySelector('#settingsButton').onclick=openModal;
 document.querySelector('#saveBaseCurrency').onclick=()=>{baseCurrency=document.querySelector('#baseCurrencySelect').value;
+travelCurrency=document.querySelector('#travelCurrencySelect').value;
 localStorage.setItem(baseKey,baseCurrency);
+localStorage.setItem(travelCurrencyKey,travelCurrency);
 localStorage.setItem(onboardingKey,'true');
 document.querySelector('#currencyModal').hidden=true;
+document.querySelector('#inputCurrency').value=travelCurrency;
 restoreCachedRates();
 render();
 loadRates();
@@ -131,6 +136,7 @@ expenses.push({id:Date.now(),name:document.querySelector('#expenseName').value.t
 save();
 e.target.reset();
 expenseDate.value=toDateValue(selectedDate);
+document.querySelector('#inputCurrency').value=travelCurrency;
 renderCategories();
 render()};
 
