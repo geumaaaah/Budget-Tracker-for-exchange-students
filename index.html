@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260825-20" />
+    <link rel="stylesheet" href="styles.css?v=20260825-21" />
   </head>
   <body>
     <div class="app-shell">
@@ -44,6 +44,7 @@
               </form>
             </section>
             <section class="panel records-panel"><div class="panel-heading"><div><h2>최근 지출</h2></div><button class="text-button" id="clearButton" type="button">전체 삭제</button></div><div id="expenseList" class="expense-list"><div class="empty-state">아직 기록이 없어요. 첫 지출을 추가해 보세요.</div></div></section>
+            <section class="feedback-cta"><div><h2>Trip Tally에 의견 남기기</h2><p>더 좋은 여행 가계부를 함께 만들어 주세요.</p></div><button id="feedbackButton" class="feedback-button" type="button">피드백 보내기</button></section>
           </div>
           <aside class="right-column">
             <section class="tip-card"><div><p>이번 달 한마디</p><strong id="tipText">기록을 시작하면 맞춤 팁을 드릴게요.</strong></div></section>
@@ -51,7 +52,7 @@
           </aside>
         </section>
       </main>
-      <footer><span class="footer-brand"><i>Trip</i> <b>Tally</b><small>_made for the precious moments abroad</small></span><button id="feedbackButton" class="feedback-button" type="button">피드백 보내기</button></footer>
+      <footer><span class="footer-brand"><i>Trip</i> <b>Tally</b><small>_made for the precious moments abroad</small></span></footer>
     </div>
     <div class="modal-backdrop" id="currencyModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
       <section class="currency-modal"><span class="modal-symbol">◎</span><h2 id="modalTitle">여행 지역과 기록 기준을<br />정해 주세요.</h2><p>여행 지역 통화는 결제 통화의 기본값으로 설정되고,<br />모든 지출은 기준 통화로 환산되어 기록돼요.</p><label>어디를 여행 중인가요?<select id="travelCurrencySelect"><option value="EUR">유럽 · EUR (€)</option><option value="USD">미국 · USD ($)</option><option value="JPY">일본 · JPY (¥)</option><option value="KRW">대한민국 · KRW (₩)</option></select></label><label>기록 기준 통화<select id="baseCurrencySelect"><option value="EUR">EUR · 유로 (€)</option><option value="KRW">KRW · 대한민국 원 (₩)</option><option value="USD">USD · 미국 달러 ($)</option><option value="JPY">JPY · 일본 엔 (¥)</option></select></label><button class="primary-button" id="saveBaseCurrency" type="button">이 설정으로 시작하기</button><small id="baseChangeWarning"></small></section>
