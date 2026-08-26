@@ -1,7 +1,7 @@
 .mobile-category-tags,.mobile-report-button,.mobile-nav-tools,.mobile-menu-links,.mobile-nav-exchange,.mobile-currency-picker,.mobile-budget-tip{display:none}
 
 @media (max-width:720px){
-  .mobile-nav{grid-template-columns:minmax(0,1fr) auto;gap:6px;padding:15px 0 12px;border-bottom:none}
+  .mobile-nav{grid-template-columns:minmax(0,1fr) auto;gap:6px;padding:15px 0 0;border-bottom:none}
   .mobile-nav a.mobile-nav-brand{grid-column:1/2;grid-row:1;margin:0 0 9px;color:var(--ink);font:700 20px 'DM Sans';letter-spacing:-.8px;text-decoration:none;white-space:nowrap}
   .mobile-nav-brand i{font-style:normal;color:var(--orange)}
   .mobile-nav-tools{display:flex;grid-column:2/-1;grid-row:1;justify-self:end;align-items:center;gap:7px;margin-bottom:8px;font:600 11px 'DM Sans';white-space:nowrap}
