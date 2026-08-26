@@ -1,4 +1,5 @@
 :root{--ink:#202421;--muted:#74766f;--paper:#f7f4ed;--card:#fffdf8;--line:#dfdbd0;--orange:#ed7248;--yellow:#f5bc48;--mint:#8fc6b1;--blue:#92b5d5;--purple:#b8a5d4}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif}
 .app-shell{max-width:1440px;margin:auto;padding:0 6.6vw}
