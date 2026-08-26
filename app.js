@@ -118,6 +118,7 @@ function openReport(){const select=document.querySelector('#reportMonthSelect'),
 document.querySelector('#reportButton').onclick=openReport;
 document.querySelector('#mobileHeaderReport').onclick=openReport;
 document.querySelector('#mobileExchangeButton').onclick=()=>{loadExchangeGraph();setMobileScreen('exchange')};
+document.querySelector('#mobileBrandHome').onclick=e=>{e.preventDefault();setMobileScreen('home')};
 document.querySelector('#mobileHomeLink').onclick=e=>{e.preventDefault();setMobileScreen('home')};
 document.querySelector('#mobileStoriesLink').onclick=e=>{e.preventDefault();setMobileScreen('stories')};
 document.querySelector('#mobileFeedbackLink').onclick=e=>{e.preventDefault();setMobileScreen('feedback')};
