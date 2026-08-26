@@ -24,7 +24,7 @@
   .mobile-report-button{display:block;flex:1;border:0;padding:11px 6px;font:600 12px 'DM Sans';cursor:pointer}
   .mobile-report-button{background:var(--ink);color:#fff}
   footer{display:none}
-  .summary-grid{order:2;margin-top:20px}
+  .summary-grid{order:2;margin-top:19px;border-top:0}
   .add-panel{order:3}
   .records-panel{order:4}
   .exchange-card{display:none}
