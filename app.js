@@ -5,14 +5,15 @@ const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48'
 let baseCurrency=localStorage.getItem(baseKey)||localStorage.getItem(legacyKey)||'',travelCurrency=localStorage.getItem(travelCurrencyKey)||baseCurrency||'EUR';
 let selectedMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
-let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]'),categoryOrder=JSON.parse(localStorage.getItem(categoryOrderKey)||'null')||[...defaultCategories,...customCategories],categoryTags=JSON.parse(localStorage.getItem(tagKey)||'{}'),tagColors=JSON.parse(localStorage.getItem(tagColorKey)||'{}'),exchangeRequestId=0,pendingExpense=null,editingTag=null;
+const readStoredJson=(key,fallback)=>{try{const value=localStorage.getItem(key);return value===null?fallback:JSON.parse(value)}catch{return fallback}},readStoredArray=key=>{const value=readStoredJson(key,[]);return Array.isArray(value)?value:[]},readStoredObject=key=>{const value=readStoredJson(key,{});return value&&typeof value==='object'&&!Array.isArray(value)?value:{}};
+let expenses=readStoredArray(dataKey).filter(item=>item&&typeof item==='object'),rates=null,rateDate='',budget=Number(localStorage.getItem(budgetKey))||0,customCategories=readStoredArray(customCategoryKey).filter(item=>typeof item==='string'),categoryOrder=readStoredArray(categoryOrderKey).filter(item=>typeof item==='string'),categoryTags=readStoredObject(tagKey),tagColors=readStoredObject(tagColorKey),exchangeRequestId=0,pendingExpense=null,editingTag=null;
+if(!categoryOrder.length)categoryOrder=[...defaultCategories,...customCategories];
 
 expenses=expenses.map(x=>({...(x.baseAmount===undefined?{...x,inputAmount:x.amount,inputCurrency:baseCurrency||'KRW',baseAmount:x.amount}:x),categories:x.categories||[x.category||'식비'],tags:x.tags||[],createdAt:x.createdAt||new Date().toISOString()}));
 
 const today=new Date(),money=(x,c=baseCurrency)=>new Intl.NumberFormat('ko-KR',{minimumFractionDigits:0,maximumFractionDigits:['EUR','USD'].includes(c)?2:0}).format(x),format=x=>`${symbols[baseCurrency]||''}${money(x)}`,formatBudget=x=>`${symbols[baseCurrency]||''}${new Intl.NumberFormat('ko-KR',{maximumFractionDigits:0}).format(Math.round(x))}`,allCategories=()=>categoryOrder;
 
 const save=()=>localStorage.setItem(dataKey,JSON.stringify(expenses));
-save();
 
 const expenseDate=document.querySelector('#expenseDate'),toDateValue=date=>date.toISOString().slice(0,10);
 expenseDate.value=toDateValue(today);
@@ -36,11 +37,10 @@ return r.json()}).finally(()=>clearTimeout(timer))}
 function loadRates(){if(!baseCurrency)return;
 restoreCachedRates();
 const currencies=['KRW','USD','EUR','JPY'].filter(currency=>currency!==baseCurrency),live=Promise.all(currencies.map(currency=>fetchWithTimeout(`https://www.currencyexchangetool.com/api/v1/convert?amount=1&from=${baseCurrency}&to=${currency}&_=${Date.now()}`,5000).then(data=>{const rate=Number(data.rate);if(!data.success||!Number.isFinite(rate))throw Error();return [currency,rate]}))).then(entries=>({rates:{[baseCurrency]:1,...Object.fromEntries(entries)},date:'실시간'})),list='KRW,USD,EUR,JPY',a=fetchWithTimeout(`https://api.frankfurter.dev/v1/latest?base=${baseCurrency}&symbols=${list}`).then(d=>({rates:{...d.rates,[baseCurrency]:1},date:d.date})),b=fetchWithTimeout(`https://open.er-api.com/v6/latest/${baseCurrency}`).then(d=>({rates:{KRW:d.rates.KRW,USD:d.rates.USD,EUR:d.rates.EUR,JPY:d.rates.JPY,[baseCurrency]:1},date:new Date(d.time_last_update_unix*1000).toISOString().slice(0,10)}));
-rateRequest=live.catch(()=>Promise.any([a,b])).then(r=>{rates=r.rates;
+return live.catch(()=>Promise.any([a,b])).then(r=>{rates=r.rates;
 rateDate=r.date;
 localStorage.setItem(rateCacheKey,JSON.stringify({base:baseCurrency,rates,date:rateDate}));
-render()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'));
-return rateRequest}
+render()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'))}
 function convert(amount,input){const x=input===baseCurrency?amount:rates?.[input]?amount/rates[input]:null;
 return x===null?null:['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
 function roundBase(x){return ['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
