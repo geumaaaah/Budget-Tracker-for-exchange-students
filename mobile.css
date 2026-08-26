@@ -1,9 +1,10 @@
-.mobile-category-tags,.mobile-report-button,.mobile-exchange-button,.mobile-currency-picker,.mobile-budget-tip{display:none}
+.mobile-category-tags,.mobile-report-button,.mobile-nav-exchange,.mobile-currency-picker,.mobile-budget-tip{display:none}
 
 @media (max-width:720px){
   .mobile-nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:15px 0 12px;border-bottom:0}
-  .mobile-nav-brand{grid-column:1/3;grid-row:1;margin:0 0 8px;color:var(--ink);font:700 14px 'DM Sans';letter-spacing:-.5px;white-space:nowrap}
+  .mobile-nav-brand{grid-column:1/2;grid-row:1;margin:0 0 8px;color:var(--ink);font:700 14px 'DM Sans';letter-spacing:-.5px;white-space:nowrap}
   .mobile-nav-brand i{font-style:normal;color:var(--orange)}
+  .mobile-nav-exchange{display:block;grid-column:2/3;grid-row:1;justify-self:end;align-self:start;border:0;background:transparent;color:var(--ink);padding:2px 0;font:600 11px 'DM Sans';white-space:nowrap;cursor:pointer}
   .mobile-currency-picker{display:block;grid-column:3/-1;grid-row:1;justify-self:end;align-self:start;border:0;background:transparent;color:var(--ink);padding:2px 0;font:600 11px 'DM Sans';cursor:pointer}
   .mobile-nav a,.mobile-nav a:first-child,.mobile-nav a:last-child{padding:10px 2px;border:1px solid var(--line);background:var(--card);font-size:11px;font-weight:700;text-align:center}
   .hero{display:contents}
@@ -11,9 +12,8 @@
   .topbar{height:auto;border-bottom:0;padding:0 0 14px;justify-content:center}
   .currency-picker{display:none}
   .mobile-header-actions{display:flex;width:100%;gap:7px}
-  .mobile-report-button,.mobile-exchange-button{display:block;flex:1;border:0;padding:11px 6px;font:600 12px 'DM Sans';cursor:pointer}
+  .mobile-report-button{display:block;flex:1;border:0;padding:11px 6px;font:600 12px 'DM Sans';cursor:pointer}
   .mobile-report-button{background:var(--ink);color:#fff}
-  .mobile-exchange-button{background:var(--card);border:1px solid var(--ink);color:var(--ink)}
   footer{display:none}
   .summary-grid{order:2;margin-top:20px}
   .add-panel{order:3}
