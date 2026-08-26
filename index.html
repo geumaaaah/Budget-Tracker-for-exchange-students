@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260826-40" />
+    <link rel="stylesheet" href="styles.css?v=20260826-41" />
   </head>
   <body>
     <div class="app-shell">
@@ -22,13 +22,13 @@
 
       <main id="top">
         <section class="hero">
-          <div><h1><span class="trip-word">Trip</span> <span class="tally-word">Tally</span></h1><p class="intro">for the precious moments abroad</p><button class="report-button" id="reportButton" type="button">월별 리포트 확인하기</button></div>
+          <div><h1><span class="trip-word">Trip</span> <span class="tally-word">Tally</span></h1><p class="intro">_for the precious moments abroad</p><button class="report-button" id="reportButton" type="button">월별 리포트 확인하기</button></div>
           <section class="exchange-card" aria-label="환율 그래프"><div class="exchange-top"><div><strong id="exchangeRateValue">환율 불러오는 중…</strong></div><div class="pair-selects"><select id="graphBase" aria-label="기준 통화"><option value="EUR">EUR</option><option value="KRW">KRW</option><option value="USD">USD</option><option value="JPY">JPY</option></select><span>→</span><select id="graphQuote" aria-label="비교 통화"><option value="KRW">KRW</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="JPY">JPY</option></select><button id="refreshExchange" type="button" aria-label="환율 새로고침">↻</button></div></div><span id="exchangeRateDate">최근 30일 추이</span><svg id="exchangeChart" viewBox="0 0 330 105" role="img" aria-label="환율 추이 그래프"></svg><div class="chart-dates"><span id="chartStartDate">—</span><span id="chartEndDate">오늘</span></div></section>
         </section>
 
         <section class="summary-grid" aria-label="이번 달 요약">
           <article class="summary-card total"><p>이번 달 지출</p><strong id="totalSpend">₩0</strong><span id="totalSpendKrw">₩0</span></article>
-          <article class="summary-card"><p>가장 많이 쓴 항목</p><strong id="topCategory">—</strong><span id="topCategoryAmount">지출을 기록해 보세요</span><strong id="secondCategory">—</strong><span id="secondCategoryAmount">—</span></article>
+          <article class="summary-card"><p>가장 많이 쓴 항목</p><strong id="topCategory">—</strong><span id="topCategoryAmount">지출을 기록해 보세요</span><p class="second-category-label">다음으로 많이 쓴 항목</p><strong id="secondCategory">—</strong><span id="secondCategoryAmount">—</span></article>
           <article class="summary-card budget"><p>이번 달 예산</p><div class="budget-value"><strong id="budgetAmount">—</strong><button id="editBudget" type="button">수정</button></div><div class="month-progress-label"><span id="budgetStatus">예산을 설정해 보세요</span></div><div class="progress"><i id="budgetProgress"></i></div><div class="month-progress-label"><span id="monthStatus">이번 달이 0% 지났어요</span></div><div class="progress month-progress"><i id="monthProgress"></i></div></article>
         </section>
 
@@ -39,7 +39,7 @@
                 <label>무엇을 결제했나요?<input id="expenseName" type="text" maxlength="40" required /></label>
                 <div class="form-row two"><label>결제 금액<input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="0" required /></label><label>결제 통화<select id="inputCurrency"><option value="KRW">KRW · ₩</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="JPY">JPY · ¥</option></select></label></div>
                 <p class="conversion-note" id="conversionNote">기준 통화를 설정하면 환산 금액을 보여드려요.</p>
-                <fieldset class="category-field"><div class="category-label"><legend>지출 항목 <span>복수 선택 가능</span></legend></div><div class="category-options" id="categoryOptions"></div><button class="category-add-button" id="addCategory" type="button">+ 항목 추가</button><div class="category-label tag-label"><legend>태그 <span>세부 분류</span></legend></div><div class="tag-options" id="expenseTagOptions"></div><div class="tag-actions"><button class="category-add-button" id="addTag" type="button">+ 태그 추가</button><button class="category-add-button" id="manageTags" type="button">태그 관리</button></div></fieldset>
+                <fieldset class="category-field"><div class="category-label"><legend>지출 항목 <span>복수 선택 가능</span></legend></div><div class="category-options" id="categoryOptions"></div><button class="category-add-button" id="addCategory" type="button">+ 항목 추가</button><div class="category-label tag-label"><legend>태그 <span>세부 분류</span></legend></div><div class="tag-options" id="expenseTagOptions"></div><div class="tag-actions"><button class="category-add-button" id="addTag" type="button">+ 태그 추가</button><button class="category-add-button" id="manageTags" type="button">+ 태그 관리</button></div></fieldset>
                 <button class="primary-button" type="submit"><span>+</span> 지출 추가하기</button>
               </form>
             </section>
