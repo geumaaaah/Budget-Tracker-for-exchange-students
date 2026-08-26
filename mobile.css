@@ -1,8 +1,19 @@
 @media (max-width:720px){
+  .mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+  .mobile-nav a,.mobile-nav a:first-child,.mobile-nav a:last-child{font-size:9px;text-align:center}
+  .hero{display:contents}
+  .hero>div:first-child{order:1;padding:43px 0 40px}
+  .summary-grid{order:2;margin-top:0}
+  .add-panel{order:3}
+  .records-panel{order:4}
+  .exchange-card{order:5;margin-top:22px}
+  .chart-panel{order:6}
   body[data-mobile-screen="report"] .report-modal{padding:22px 18px;background:var(--card);border:1px solid var(--line);box-shadow:none}
   body[data-mobile-screen="report"] .report-modal h2{font-size:23px;letter-spacing:-1px}
+  body[data-mobile-screen="report"] .close-report{display:none}
   .summary-card{padding:19px 16px}
   .summary-card p,.summary-card span{font-size:12px}
   .summary-card strong,.summary-card.total strong,#totalSpendKrw,#topCategoryAmount{font-size:20px}
   .second-category-label,#secondCategory,#secondCategoryAmount{display:none}
+  .tag-spend-button{display:none}
 }
