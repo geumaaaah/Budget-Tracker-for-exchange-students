@@ -66,7 +66,7 @@ function renderCategories(){document.querySelector('#categoryOptions').innerHTML
 function renderEditCategories(selected){document.querySelector('#editCategoryOptions').innerHTML=allCategories().map(x=>`<label class="category-option"><input type="checkbox" name="editExpenseCategory" value="${esc(x)}" ${selected.includes(x)?'checked':''}><span>${esc(x)}</span></label>`).join('')}
 function openEditExpense(id){const item=expenses.find(x=>x.id===Number(id));if(!item)return;document.querySelector('#editExpenseId').value=item.id;document.querySelector('#editExpenseName').value=item.name;document.querySelector('#editExpenseAmount').value=item.inputAmount;document.querySelector('#editInputCurrency').value=item.inputCurrency;document.querySelector('#editExpenseDate').value=toDateValue(new Date(item.createdAt));renderEditCategories(item.categories);renderEditTags(item.tags);document.querySelector('#editExpenseModal').hidden=false}
 function render(){const monthExpenses=expenses.filter(x=>{const date=new Date(x.createdAt);return date.getFullYear()===selectedMonth.getFullYear()&&date.getMonth()===selectedMonth.getMonth()}),total=monthExpenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:monthExpenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),ranking=[...grouped].sort((a,b)=>b.value-a.value),top=ranking[0],second=ranking[1],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(selectedMonth.getFullYear(),selectedMonth.getMonth()+1,0).getDate(),isCurrentMonth=selectedMonth.getFullYear()===today.getFullYear()&&selectedMonth.getMonth()===today.getMonth(),monthProgress=isCurrentMonth?Math.round(today.getDate()/daysInMonth*100):selectedMonth<today?100:0;
-document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
+const baseCurrencyText=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';document.querySelector('#baseCurrencyLabel').textContent=baseCurrencyText;document.querySelector('#mobileBaseCurrencyLabel').textContent=baseCurrencyText;
 document.querySelector('#totalSpend').textContent=format(total);
 const totalKrw=baseCurrency==='KRW'?total:rates?.KRW?total*rates.KRW:null,totalSpendKrw=document.querySelector('#totalSpendKrw');
 totalSpendKrw.hidden=baseCurrency==='KRW';
@@ -95,6 +95,7 @@ document.querySelector('#travelCurrencySelect').value=travelCurrency;
 document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
 document.querySelector('#currencyModal').hidden=false}
 document.querySelector('#settingsButton').onclick=openModal;
+document.querySelector('#mobileSettingsButton').onclick=openModal;
 document.querySelector('#saveBaseCurrency').onclick=()=>{baseCurrency=document.querySelector('#baseCurrencySelect').value;
 travelCurrency=document.querySelector('#travelCurrencySelect').value;
 localStorage.setItem(baseKey,baseCurrency);
