@@ -26,6 +26,8 @@
   footer{display:none}
   .summary-grid{order:2;margin-top:19px;border-top:0}
   .summary-card{border-top:0}
+  .summary-card:nth-child(2){border-left:1px solid var(--line)}
+  .summary-card.budget{border-top:1px solid var(--line)}
   .add-panel{order:3}
   .records-panel{order:4}
   .exchange-card{display:none}
