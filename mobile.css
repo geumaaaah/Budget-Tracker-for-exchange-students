@@ -78,4 +78,5 @@
   body[data-mobile-screen="exchange"] .pair-selects select{font-size:10px}
   body[data-mobile-screen="exchange"] .pair-selects button{font-size:16px;padding-left:2px}
   .rate-modal{padding:25px 20px}
+  .currency-modal #modalTitle.modal-title-single-line{font-size:clamp(13px,4.3vw,17px);letter-spacing:-.8px;white-space:nowrap}
 }
