@@ -25,6 +25,7 @@
   .mobile-report-button{background:var(--ink);color:#fff}
   footer{display:none}
   .summary-grid{order:2;margin-top:19px;border-top:0}
+  .summary-card{border-top:0}
   .add-panel{order:3}
   .records-panel{order:4}
   .exchange-card{display:none}
