@@ -120,6 +120,7 @@ document.querySelector('#mobileHeaderReport').onclick=openReport;
 document.querySelector('#mobileExchangeButton').onclick=()=>{loadExchangeGraph();setMobileScreen('exchange')};
 document.querySelector('#mobileBrandHome').onclick=e=>{e.preventDefault();setMobileScreen('home')};
 document.querySelector('#mobileHomeLink').onclick=e=>{e.preventDefault();setMobileScreen('home')};
+document.querySelector('#mobileReportLink').onclick=e=>{e.preventDefault();openReport()};
 document.querySelector('#mobileStoriesLink').onclick=e=>{e.preventDefault();setMobileScreen('stories')};
 document.querySelector('#mobileFeedbackLink').onclick=e=>{e.preventDefault();setMobileScreen('feedback')};
 document.querySelector('#closeReport').onclick=()=>{document.querySelector('#reportModal').hidden=true;document.querySelector('#closeReport').textContent='×';if(isMobileView())setMobileScreen('home')};
