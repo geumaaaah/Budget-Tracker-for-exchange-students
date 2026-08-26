@@ -115,7 +115,7 @@ const isMobileView=()=>window.matchMedia('(max-width:720px)').matches;
 function setMobileScreen(screen){document.body.dataset.mobileScreen=screen;if(screen!=='report'){document.querySelector('#reportModal').hidden=true;document.querySelector('#closeReport').textContent='×'}window.scrollTo(0,0)}
 function openReport(){const select=document.querySelector('#reportMonthSelect'),keys=[...new Set(expenses.map(x=>{const date=new Date(x.createdAt);return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`}))],current=`${selectedMonth.getFullYear()}-${String(selectedMonth.getMonth()+1).padStart(2,'0')}`;if(!keys.includes(current))keys.push(current);select.innerHTML=keys.sort().reverse().map(x=>{const [year,month]=x.split('-');return `<option value="${x}">${year}년 ${Number(month)}월</option>`}).join('');select.value=current;renderReport();renderComparison();document.querySelector('#reportModal').hidden=false;if(isMobileView())setMobileScreen('report')}
 document.querySelector('#reportButton').onclick=openReport;
-document.querySelector('#mobileReportLink').onclick=e=>{e.preventDefault();openReport()};
+document.querySelector('#mobileHeaderReport').onclick=openReport;
 document.querySelector('#mobileHomeLink').onclick=e=>{e.preventDefault();setMobileScreen('home')};
 document.querySelector('#mobileStoriesLink').onclick=e=>{e.preventDefault();setMobileScreen('stories')};
 document.querySelector('#mobileFeedbackLink').onclick=e=>{e.preventDefault();setMobileScreen('feedback')};
