@@ -5,7 +5,7 @@ const symbols={KRW:'₩',USD:'$',EUR:'€',JPY:'¥'},colors=['#ed7248','#f5bc48'
 let baseCurrency=localStorage.getItem(baseKey)||localStorage.getItem(legacyKey)||'',travelCurrency=localStorage.getItem(travelCurrencyKey)||baseCurrency||'EUR';
 let selectedMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
 
-let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]'),categoryOrder=JSON.parse(localStorage.getItem(categoryOrderKey)||'null')||[...defaultCategories,...customCategories],exchangeRequestId=0;
+let expenses=JSON.parse(localStorage.getItem(dataKey)||'[]'),rates=null,rateDate='',rateRequest=null,budget=Number(localStorage.getItem(budgetKey))||0,customCategories=JSON.parse(localStorage.getItem(customCategoryKey)||'[]'),categoryOrder=JSON.parse(localStorage.getItem(categoryOrderKey)||'null')||[...defaultCategories,...customCategories],exchangeRequestId=0,pendingExpense=null;
 
 expenses=expenses.map(x=>({...(x.baseAmount===undefined?{...x,inputAmount:x.amount,inputCurrency:baseCurrency||'KRW',baseAmount:x.amount}:x),categories:x.categories||[x.category||'식비'],createdAt:x.createdAt||new Date().toISOString()}));
 
@@ -43,6 +43,7 @@ render()}).catch(()=>note(rates?'':'환율 조회가 지연되고 있어요.'));
 return rateRequest}
 function convert(amount,input){const x=input===baseCurrency?amount:rates?.[input]?amount/rates[input]:null;
 return x===null?null:['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
+function roundBase(x){return ['EUR','USD'].includes(baseCurrency)?Math.round((x+Number.EPSILON)*100)/100:Math.round(x)}
 function note(error=''){const amount=Number(document.querySelector('#expenseAmount').value),input=document.querySelector('#inputCurrency').value,el=document.querySelector('#conversionNote');
 if(error){el.textContent=error;
 return}if(!baseCurrency){el.textContent='기준 통화를 설정하면 환산 금액을 보여드려요.';
@@ -58,8 +59,9 @@ function openEditExpense(id){const item=expenses.find(x=>x.id===Number(id));if(!
 function render(){const monthExpenses=expenses.filter(x=>{const date=new Date(x.createdAt);return date.getFullYear()===selectedMonth.getFullYear()&&date.getMonth()===selectedMonth.getMonth()}),total=monthExpenses.reduce((s,x)=>s+x.baseAmount,0),grouped=allCategories().map((name,i)=>({name,color:colors[i%colors.length],value:monthExpenses.reduce((s,x)=>s+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value),ranking=[...grouped].sort((a,b)=>b.value-a.value),top=ranking[0],second=ranking[1],ratio=budget?Math.min(total/budget*100,100):0,daysInMonth=new Date(selectedMonth.getFullYear(),selectedMonth.getMonth()+1,0).getDate(),isCurrentMonth=selectedMonth.getFullYear()===today.getFullYear()&&selectedMonth.getMonth()===today.getMonth(),monthProgress=isCurrentMonth?Math.round(today.getDate()/daysInMonth*100):selectedMonth<today?100:0;
 document.querySelector('#baseCurrencyLabel').textContent=baseCurrency?`기준 ${baseCurrency} · ${symbols[baseCurrency]}`:'기준 통화 설정';
 document.querySelector('#totalSpend').textContent=format(total);
-const totalKrw=baseCurrency==='KRW'?total:rates?.KRW?total*rates.KRW:null;
-document.querySelector('#totalSpendKrw').textContent=totalKrw===null?'원화 환산 중…':`₩${money(totalKrw,'KRW')}`;
+const totalKrw=baseCurrency==='KRW'?total:rates?.KRW?total*rates.KRW:null,totalSpendKrw=document.querySelector('#totalSpendKrw');
+totalSpendKrw.hidden=baseCurrency==='KRW';
+if(baseCurrency!=='KRW')totalSpendKrw.textContent=totalKrw===null?'원화 환산 중…':`₩${money(totalKrw,'KRW')}`;
 document.querySelector('#chartTotal').textContent=format(total);
 document.querySelector('#budgetAmount').textContent=budget?formatBudget(budget):'예산 미설정';
 document.querySelector('#budgetProgress').style.width=`${ratio}%`;
@@ -94,7 +96,8 @@ document.querySelector('#inputCurrency').value=travelCurrency;
 restoreCachedRates();
 render();
 loadRates();
-document.querySelector('#graphBase').value=baseCurrency;
+document.querySelector('#graphBase').value=travelCurrency;
+document.querySelector('#graphQuote').value='KRW';
 loadExchangeGraph()};
 
 function renderReport(){const key=document.querySelector('#reportMonthSelect').value,[year,month]=key.split('-').map(Number),items=expenses.filter(x=>{const date=new Date(x.createdAt);return date.getFullYear()===year&&date.getMonth()+1===month}),total=items.reduce((sum,x)=>sum+x.baseAmount,0),groups=allCategories().map((name,index)=>({name,color:colors[index%colors.length],value:items.reduce((sum,x)=>sum+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value).sort((a,b)=>b.value-a.value),top=groups[0],max=top?.value||1,delta=budget?total-budget:null,percent=budget?Math.round(Math.abs(delta)/budget*100):null;document.querySelector('#reportTotal').textContent=format(total);document.querySelector('#reportTopCategory').textContent=top?.name||'—';document.querySelector('#reportTopAmount').textContent=top?format(top.value):'기록이 없어요';document.querySelector('#reportBudgetDelta').textContent=delta===null?'예산 미설정':delta>0?`${percent}% 초과`:`${percent}% 절약`;document.querySelector('#reportBudgetAmount').textContent=delta===null?'예산을 설정해 주세요':delta>0?`${format(delta)} 더 썼어요`:`${format(Math.abs(delta))} 덜 썼어요`;document.querySelector('#reportCategoryList').innerHTML=groups.length?groups.map(x=>`<div class="report-category-row"><span>${esc(x.name)}</span><i style="width:${x.value/max*100}%;background:${x.color}"></i><strong>${format(x.value)}</strong></div>`).join(''):'<div class="empty-state">이 달에는 기록이 없어요.</div>'}
@@ -130,18 +133,14 @@ categoryOptions.addEventListener('drop',e=>{e.preventDefault();const target=e.ta
 document.querySelector('#expenseAmount').oninput=note;
 document.querySelector('#inputCurrency').onchange=note;
 
-document.querySelector('#expenseForm').onsubmit=e=>{e.preventDefault();
-if(!baseCurrency)return openModal();
-const amount=Number(document.querySelector('#expenseAmount').value),inputCurrency=document.querySelector('#inputCurrency').value,baseAmount=convert(amount,inputCurrency),selected=[...document.querySelectorAll('input[name="expenseCategory"]:checked')].map(x=>x.value),selectedDate=new Date(`${expenseDate.value}T12:00:00`);
-if(baseAmount===null){loadRates();
-return note('환율을 불러오는 중이에요. 잠시 후 다시 추가해 주세요.')}if(!selected.length)return alert('지출 항목을 하나 이상 선택해 주세요.');
-expenses.push({id:Date.now(),name:document.querySelector('#expenseName').value.trim(),inputAmount:amount,inputCurrency,baseAmount,categories:selected,date:`${selectedDate.getMonth()+1}/${selectedDate.getDate()}`,createdAt:selectedDate.toISOString(),rateDate});
-save();
-e.target.reset();
-expenseDate.value=toDateValue(selectedDate);
-document.querySelector('#inputCurrency').value=travelCurrency;
-renderCategories();
-render()};
+function saveExpense(expense){expenses.push({id:Date.now(),...expense});save();document.querySelector('#expenseForm').reset();expenseDate.value=toDateValue(new Date(expense.createdAt));document.querySelector('#inputCurrency').value=travelCurrency;renderCategories();render()}
+function updateManualRatePreview(){const rate=Number(document.querySelector('#manualRate').value),preview=document.querySelector('#manualRatePreview');preview.textContent=Number.isFinite(rate)&&rate>0?`${symbols[pendingExpense.inputCurrency]}${money(pendingExpense.amount,pendingExpense.inputCurrency)} → ${format(roundBase(pendingExpense.amount*rate))}`:'환율을 입력하면 기준 통화 환산 금액을 보여드려요.'}
+async function openRateModal(expense){pendingExpense=expense;const liveBase=convert(expense.amount,expense.inputCurrency),liveRate=liveBase===null?null:liveBase/expense.amount;document.querySelector('#rateModalTitle').textContent=`${expense.inputCurrency} 결제 환율 선택`;document.querySelector('#ratePairLabel').textContent=`1 ${expense.inputCurrency} = 기준 통화 ${baseCurrency}`;document.querySelector('#manualRate').value=liveRate?String(liveRate):'';document.querySelector('#liveRatePreview').textContent=liveBase===null?'실시간 환율을 불러오는 중이에요.':`이전 조회값 · ${symbols[expense.inputCurrency]}${money(expense.amount,expense.inputCurrency)} → ${format(liveBase)}`;document.querySelector('#rateModeLive').checked=true;document.querySelector('#manualRate').disabled=true;updateManualRatePreview();document.querySelector('#rateModal').hidden=false;try{const data=await fetchWithTimeout(`https://www.currencyexchangetool.com/api/v1/convert?amount=1&from=${expense.inputCurrency}&to=${baseCurrency}&_=${Date.now()}`,5000),rate=Number(data.rate);if(pendingExpense!==expense||!data.success||!Number.isFinite(rate))return;pendingExpense.liveBase=roundBase(expense.amount*rate);pendingExpense.liveRate=rate;if(document.querySelector('#rateModeLive').checked)document.querySelector('#manualRate').value=String(rate);document.querySelector('#liveRatePreview').textContent=`실시간 · ${symbols[expense.inputCurrency]}${money(expense.amount,expense.inputCurrency)} → ${format(pendingExpense.liveBase)}`;updateManualRatePreview()}catch{}}
+document.querySelector('#expenseForm').onsubmit=e=>{e.preventDefault();if(!baseCurrency)return openModal();const amount=Number(document.querySelector('#expenseAmount').value),inputCurrency=document.querySelector('#inputCurrency').value,selected=[...document.querySelectorAll('input[name="expenseCategory"]:checked')].map(x=>x.value),selectedDate=new Date(`${expenseDate.value}T12:00:00`);if(!selected.length)return alert('지출 항목을 하나 이상 선택해 주세요.');const expense={name:document.querySelector('#expenseName').value.trim(),amount,inputCurrency,categories:selected,date:`${selectedDate.getMonth()+1}/${selectedDate.getDate()}`,createdAt:selectedDate.toISOString()};if(inputCurrency===baseCurrency)return saveExpense({...expense,inputAmount:amount,baseAmount:amount,rateDate:'동일 통화'});openRateModal(expense)};
+document.querySelectorAll('input[name="rateMode"]').forEach(input=>input.onchange=()=>{document.querySelector('#manualRate').disabled=document.querySelector('#rateModeLive').checked});
+document.querySelector('#manualRate').oninput=updateManualRatePreview;
+document.querySelector('#closeRateModal').onclick=()=>{pendingExpense=null;document.querySelector('#rateModal').hidden=true};
+document.querySelector('#rateForm').onsubmit=e=>{e.preventDefault();if(!pendingExpense)return;const isManual=document.querySelector('#rateModeManual').checked,manualRate=Number(document.querySelector('#manualRate').value),baseAmount=isManual?roundBase(pendingExpense.amount*manualRate):pendingExpense.liveBase??convert(pendingExpense.amount,pendingExpense.inputCurrency);if(isManual&&(!Number.isFinite(manualRate)||manualRate<=0))return alert('올바른 환율을 입력해 주세요.');if(baseAmount===null){loadRates();return alert('실시간 환율을 불러오는 중이에요. 잠시 후 다시 시도해 주세요.')}saveExpense({...pendingExpense,inputAmount:pendingExpense.amount,baseAmount,rateDate:isManual?`직접 입력 · 1 ${pendingExpense.inputCurrency} = ${manualRate} ${baseCurrency}`:pendingExpense.liveRate?`실시간 · 1 ${pendingExpense.inputCurrency} = ${pendingExpense.liveRate} ${baseCurrency}`:rateDate,rateType:isManual?'manual':'live'});pendingExpense=null;document.querySelector('#rateModal').hidden=true};
 
 document.querySelector('#expenseList').onclick=e=>{if(e.target.dataset.editId)return openEditExpense(e.target.dataset.editId);if(e.target.dataset.deleteId){expenses=expenses.filter(x=>x.id!==Number(e.target.dataset.deleteId));
 save();
@@ -157,6 +156,7 @@ renderCategories();
 if(!baseCurrency&&!localStorage.getItem(onboardingKey))openModal();
 else{render();
 loadRates()}
-if(baseCurrency)document.querySelector('#graphBase').value=baseCurrency;
+if(baseCurrency)document.querySelector('#graphBase').value=travelCurrency;
+document.querySelector('#graphQuote').value='KRW';
 loadExchangeGraph();
 setInterval(()=>{if(!document.hidden)loadExchangeGraph()},60000);
