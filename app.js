@@ -207,3 +207,13 @@ if(baseCurrency)document.querySelector('#graphBase').value=travelCurrency;
 document.querySelector('#graphQuote').value='KRW';
 loadExchangeGraph();
 setInterval(()=>{if(!document.hidden)loadExchangeGraph()},60000);
+
+const pwaInstallPrompt=document.querySelector('#pwaInstallPrompt'),pwaInstallMessage=document.querySelector('#pwaInstallMessage'),pwaInstallButton=document.querySelector('#pwaInstallButton'),pwaInstallDismiss=document.querySelector('#pwaInstallDismiss'),pwaDismissKey='trip-tally-pwa-install-dismissed',pwaStandalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true,pwaUserAgent=window.navigator.userAgent,pwaIsIosSafari=/iPad|iPhone|iPod/.test(pwaUserAgent)&&/Safari/.test(pwaUserAgent)&&!/(CriOS|FxiOS|EdgiOS)/.test(pwaUserAgent);let deferredInstallPrompt;
+const hidePwaInstallPrompt=()=>{pwaInstallPrompt.hidden=true};
+const showPwaInstallPrompt=(message,canInstall=false)=>{if(pwaStandalone||sessionStorage.getItem(pwaDismissKey))return;pwaInstallMessage.textContent=message;pwaInstallButton.hidden=!canInstall;pwaInstallPrompt.hidden=false};
+pwaInstallDismiss.onclick=()=>{sessionStorage.setItem(pwaDismissKey,'1');hidePwaInstallPrompt()};
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;showPwaInstallPrompt('Trip Tally를 홈 화면에 추가해 더 편하게 기록하세요.',true)});
+pwaInstallButton.onclick=async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=undefined;hidePwaInstallPrompt()};
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=undefined;hidePwaInstallPrompt()});
+if(pwaIsIosSafari)showPwaInstallPrompt('공유 버튼 → ‘홈 화면에 추가’를 눌러 앱처럼 사용하세요.');
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));

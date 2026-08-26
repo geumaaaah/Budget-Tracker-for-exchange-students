@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f4ed" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Trip Tally" />
     <title>TripTally | 교환학생 가계부</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/trip-tally-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,6 +19,11 @@
   <body>
     <div class="app-shell">
       <nav class="mobile-nav" aria-label="모바일 탐색"><a class="mobile-nav-brand" href="#top" id="mobileBrandHome"><i>Trip</i> <b>Tally</b></a><div class="mobile-nav-tools"><button class="mobile-nav-exchange" id="mobileExchangeButton" type="button" aria-label="실시간 환율 확인"><span>실시간 환율</span></button><span class="mobile-nav-divider" aria-hidden="true">│</span><button class="mobile-currency-picker" id="mobileSettingsButton" type="button"><span id="mobileBaseCurrencyLabel">기준 통화 설정</span></button></div><div class="mobile-menu-links"><a href="#top" id="mobileHomeLink">홈</a><span class="mobile-menu-divider" aria-hidden="true">│</span><a href="#tag-spend" id="mobileTagSpendLink">나의 지출</a><span class="mobile-menu-divider" aria-hidden="true">│</span><a href="#report" id="mobileReportLink">월간 리포트</a><span class="mobile-menu-divider" aria-hidden="true">│</span><a href="#traveler-stories" id="mobileStoriesLink">이야기</a><span class="mobile-menu-divider" aria-hidden="true">│</span><a href="#feedback" id="mobileFeedbackLink">피드백</a></div></nav>
+      <aside class="pwa-install-prompt" id="pwaInstallPrompt" aria-live="polite" hidden>
+        <p id="pwaInstallMessage"></p>
+        <button id="pwaInstallButton" type="button" hidden>앱 설치</button>
+        <button id="pwaInstallDismiss" type="button" aria-label="설치 안내 닫기">×</button>
+      </aside>
       <header class="topbar">
         <div class="month-nav">
           <button class="icon-button" id="prevMonth" aria-label="이전 달">‹</button>
