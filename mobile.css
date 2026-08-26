@@ -1,0 +1,8 @@
+@media (max-width:720px){
+  body[data-mobile-screen="report"] .report-modal{padding:22px 18px;background:var(--card);border:1px solid var(--line);box-shadow:none}
+  body[data-mobile-screen="report"] .report-modal h2{font-size:23px;letter-spacing:-1px}
+  .summary-card{padding:19px 16px}
+  .summary-card p,.summary-card span{font-size:12px}
+  .summary-card strong,.summary-card.total strong,#totalSpendKrw,#topCategoryAmount{font-size:20px}
+  .second-category-label,#secondCategory,#secondCategoryAmount{display:none}
+}
