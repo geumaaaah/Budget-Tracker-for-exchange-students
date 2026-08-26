@@ -10,6 +10,7 @@
   .hero>div:first-child{display:none}
   .topbar{height:58px;justify-content:space-between}
   .mobile-report-button{display:block;border:0;background:var(--ink);color:#fff;padding:9px 11px;font:600 11px 'DM Sans';cursor:pointer}
+  footer{display:none}
   .summary-grid{order:2;margin-top:20px}
   .add-panel{order:3}
   .records-panel{order:4}
