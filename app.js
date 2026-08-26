@@ -92,7 +92,7 @@ const tipMessage=budgetGap===null?'예산을 설정하면 소비 속도를 비�
 note()}
 function openModal(mode='change'){const isInitial=mode==='initial';document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';
 document.querySelector('#travelCurrencySelect').value=travelCurrency;
-document.querySelector('#modalTitle').innerHTML=isInitial?'여행 지역과 기록 기준을<br />정해 주세요.':'통화 설정을<br />바꿔 주세요.';
+document.querySelector('#modalTitle').innerHTML=isInitial?'여행 지역과 기록 기준을<br />정해 주세요.':'통화 설정을 바꿔 주세요.';
 document.querySelector('#currencyModal p').innerHTML=isInitial?'여행 지역 통화는 결제 통화의 기본값으로 설정되고,<br />모든 지출은 기준 통화로 환산되어 기록돼요.':'여행 지역 통화와 기록 기준 통화를 변경할 수 있어요.<br />기존 지출은 기존 기준 통화로 유지돼요.';
 document.querySelector('#saveBaseCurrency').textContent=isInitial?'이 설정으로 시작하기':'이 설정으로 바꾸기';
 document.querySelector('#baseChangeWarning').textContent=!isInitial&&expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
