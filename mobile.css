@@ -24,7 +24,7 @@
   .mobile-report-button{display:block;flex:1;border:0;padding:11px 6px;font:600 12px 'DM Sans';cursor:pointer}
   .mobile-report-button{background:var(--ink);color:#fff}
   footer{display:none}
-  .summary-grid{order:2;margin-top:19px;border-top:0}
+  .summary-grid{order:2;margin-top:0;border-top:0;border-bottom:1px solid var(--line)}
   .summary-card{border-top:0}
   .summary-card:nth-child(2){border-left:1px solid var(--line)}
   .summary-card.budget{border-top:1px solid var(--line)}
