@@ -94,8 +94,8 @@ function openModal(){document.querySelector('#baseCurrencySelect').value=baseCur
 document.querySelector('#travelCurrencySelect').value=travelCurrency;
 document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
 document.querySelector('#currencyModal').hidden=false}
-document.querySelector('#settingsButton').onclick=openModal;
-document.querySelector('#mobileSettingsButton').onclick=openModal;
+document.querySelector('#settingsButton').onclick=()=>{trackMenuClick('base_currency');openModal()};
+document.querySelector('#mobileSettingsButton').onclick=()=>{trackMenuClick('base_currency');openModal()};
 document.querySelector('#saveBaseCurrency').onclick=()=>{baseCurrency=document.querySelector('#baseCurrencySelect').value;
 travelCurrency=document.querySelector('#travelCurrencySelect').value;
 localStorage.setItem(baseKey,baseCurrency);
@@ -113,19 +113,20 @@ loadExchangeGraph()};
 function renderReport(){const key=document.querySelector('#reportMonthSelect').value,[year,month]=key.split('-').map(Number),items=expenses.filter(x=>{const date=new Date(x.createdAt);return date.getFullYear()===year&&date.getMonth()+1===month}),total=items.reduce((sum,x)=>sum+x.baseAmount,0),groups=allCategories().map((name,index)=>({name,color:colors[index%colors.length],value:items.reduce((sum,x)=>sum+(x.categories.includes(name)?x.baseAmount/x.categories.length:0),0)})).filter(x=>x.value).sort((a,b)=>b.value-a.value),top=groups[0],max=top?.value||1,delta=budget?total-budget:null,percent=budget?Math.round(Math.abs(delta)/budget*100):null;document.querySelector('#reportTitle').textContent=`${month}월 월간 리포트`;document.querySelector('#reportBreakdownTitle').textContent=`${month}월 항목별 지출`;document.querySelector('#reportTagsTitle').textContent=`${month}월 태그별 지출`;document.querySelector('#reportTotal').textContent=format(total);document.querySelector('#reportTopCategory').textContent=top?.name||'—';document.querySelector('#reportTopAmount').textContent=top?format(top.value):'기록이 없어요';document.querySelector('#reportBudgetDelta').textContent=delta===null?'예산 미설정':delta>0?`${percent}% 초과`:`${percent}% 절약`;document.querySelector('#reportBudgetAmount').textContent=delta===null?'예산을 설정해 주세요':delta>0?`${format(delta)} 더 썼어요`:`${format(Math.abs(delta))} 덜 썼어요`;document.querySelector('#reportCategoryList').innerHTML=groups.length?groups.map(x=>`<div class="report-category-row"><span>${esc(x.name)}</span><i style="width:${x.value/max*100}%;background:${x.color}"></i><strong>${format(x.value)}</strong></div>`).join(''):'<div class="empty-state">이 달에는 기록이 없어요.</div>';renderCategoryTagDonuts('#reportTagChart',items)}
 function renderComparison(){const totals=new Map();expenses.forEach(x=>{const date=new Date(x.createdAt),key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;totals.set(key,(totals.get(key)||0)+x.baseAmount)});const [year,month]=document.querySelector('#reportMonthSelect').value.split('-').map(Number),end=new Date(year,month-1,1),keys=[2,1,0].map(offset=>{const date=new Date(end.getFullYear(),end.getMonth()-offset,1);return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`}),values=keys.map(key=>totals.get(key)||0),max=Math.max(...values,1),palette=['#92b5d5','#f5bc48','#ed7248'],topIndex=values.indexOf(Math.max(...values));document.querySelector('#reportComparisonChart').innerHTML=`<div class="comparison-bars">${keys.map((key,index)=>{const [,label]=key.split('-');return `<div class="comparison-bar-item"><strong>${format(values[index])}</strong><div class="comparison-bar-track"><i style="height:${values[index]/max*100}%;background:${palette[index]}"></i></div><span>${Number(label)}월</span></div>`}).join('')}</div>`;document.querySelector('#reportComparisonNote').textContent=values.some(Boolean)?`${Number(keys[topIndex].split('-')[1])}월달 지출이 가장 많아요.`:'비교할 지출 기록이 없어요.'}
 const isMobileView=()=>window.matchMedia('(max-width:720px)').matches;
+const trackMenuClick=menuName=>{if(typeof window.gtag==='function')window.gtag('event','menu_click',{menu_name:menuName,screen_type:isMobileView()?'mobile':'desktop'})};
 function setMobileScreen(screen){document.activeElement?.blur();document.body.dataset.mobileScreen=screen;if(screen!=='report'){document.querySelector('#reportModal').hidden=true;document.querySelector('#closeReport').textContent='×'}window.scrollTo(0,0)}
 function openReport(){const select=document.querySelector('#reportMonthSelect'),keys=[...new Set(expenses.map(x=>{const date=new Date(x.createdAt);return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`}))],current=`${selectedMonth.getFullYear()}-${String(selectedMonth.getMonth()+1).padStart(2,'0')}`;if(!keys.includes(current))keys.push(current);select.innerHTML=keys.sort().reverse().map(x=>{const [year,month]=x.split('-');return `<option value="${x}">${year}년 ${Number(month)}월</option>`}).join('');select.value=current;renderReport();renderComparison();document.querySelector('#reportModal').hidden=false;if(isMobileView())setMobileScreen('report')}
-document.querySelector('#reportButton').onclick=openReport;
-document.querySelector('#mobileHeaderReport').onclick=openReport;
-document.querySelector('#mobileExchangeButton').onclick=()=>{loadExchangeGraph();setMobileScreen('exchange')};
-document.querySelector('#mobileBrandHome').onclick=e=>{e.preventDefault();setMobileScreen('home')};
-document.querySelector('#mobileHomeLink').onclick=e=>{e.preventDefault();setMobileScreen('home')};
-document.querySelector('#mobileReportLink').onclick=e=>{e.preventDefault();openReport()};
-document.querySelector('#mobileStoriesLink').onclick=e=>{e.preventDefault();setMobileScreen('stories')};
-document.querySelector('#mobileFeedbackLink').onclick=e=>{e.preventDefault();setMobileScreen('feedback')};
+document.querySelector('#reportButton').onclick=()=>{trackMenuClick('monthly_report');openReport()};
+document.querySelector('#mobileHeaderReport').onclick=()=>{trackMenuClick('monthly_report');openReport()};
+document.querySelector('#mobileExchangeButton').onclick=()=>{trackMenuClick('exchange_rate');loadExchangeGraph();setMobileScreen('exchange')};
+document.querySelector('#mobileBrandHome').onclick=e=>{e.preventDefault();trackMenuClick('home');setMobileScreen('home')};
+document.querySelector('#mobileHomeLink').onclick=e=>{e.preventDefault();trackMenuClick('home');setMobileScreen('home')};
+document.querySelector('#mobileReportLink').onclick=e=>{e.preventDefault();trackMenuClick('monthly_report');openReport()};
+document.querySelector('#mobileStoriesLink').onclick=e=>{e.preventDefault();trackMenuClick('stories');setMobileScreen('stories')};
+document.querySelector('#mobileFeedbackLink').onclick=e=>{e.preventDefault();trackMenuClick('feedback');setMobileScreen('feedback')};
 document.querySelector('#closeReport').onclick=()=>{document.querySelector('#reportModal').hidden=true;document.querySelector('#closeReport').textContent='×';if(isMobileView())setMobileScreen('home')};
 document.querySelector('#reportMonthSelect').onchange=()=>{renderReport();renderComparison()};
-document.querySelector('#mobileTagSpendLink').onclick=e=>{e.preventDefault();renderCategoryTagDonuts('#mobileCategoryTagChart',expenses);setMobileScreen('category')};
+document.querySelector('#mobileTagSpendLink').onclick=e=>{e.preventDefault();trackMenuClick('my_spending');renderCategoryTagDonuts('#mobileCategoryTagChart',expenses);setMobileScreen('category')};
 document.querySelector('#graphBase').onchange=loadExchangeGraph;
 document.querySelector('#graphQuote').onchange=loadExchangeGraph;
 document.querySelector('#refreshExchange').onclick=loadExchangeGraph;
