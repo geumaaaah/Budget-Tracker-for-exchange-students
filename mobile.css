@@ -50,6 +50,7 @@
   .summary-card{padding:19px 16px}
   .summary-card p,.summary-card span{font-size:12px}
   .summary-card strong,.summary-card.total strong,#totalSpendKrw,#topCategoryAmount{font-size:20px}
+  #topCategoryAmount.empty-summary-copy{font-size:12px}
   .second-category-label,#secondCategory,#secondCategoryAmount{display:none}
   .chart-panel,.tag-spend-button{display:none}
   .analysis-subtitle,.desktop-tag-spend{display:none}

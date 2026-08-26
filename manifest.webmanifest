@@ -1,6 +1,6 @@
 {
-  "name": "Trip Tally",
-  "short_name": "Trip Tally",
+  "name": "트립탤리",
+  "short_name": "트립탤리",
   "description": "교환학생과 여행객을 위한 환율 가계부",
   "lang": "ko",
   "start_url": "./",

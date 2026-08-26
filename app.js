@@ -78,7 +78,7 @@ document.querySelector('#budgetStatus').textContent=budget?`예산의 ${Math.rou
 document.querySelector('#monthStatus').textContent=`이번 달이 ${monthProgress}% 지났어요`;
 document.querySelector('#monthProgress').style.width=`${monthProgress}%`;
 document.querySelector('#topCategory').textContent=top?top.name:'—';
-document.querySelector('#topCategoryAmount').textContent=top?`${format(top.value)} 지출`:'지출을 기록해 보세요';
+const topCategoryAmount=document.querySelector('#topCategoryAmount');topCategoryAmount.textContent=top?`${format(top.value)} 지출`:'지출을 기록해 보세요';topCategoryAmount.classList.toggle('empty-summary-copy',!top);
 document.querySelector('#secondCategory').textContent=second?second.name:'—';
 document.querySelector('#secondCategoryAmount').textContent=second?`${format(second.value)} 지출`:'—';
 let p=0;
