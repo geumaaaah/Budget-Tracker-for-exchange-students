@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css?v=20260826-56" />
-    <link rel="stylesheet" href="mobile.css?v=20260826-03" />
+    <link rel="stylesheet" href="mobile.css?v=20260826-04" />
   </head>
   <body>
     <div class="app-shell">
@@ -50,7 +50,7 @@
           </div>
           <aside class="right-column">
             <section class="tip-card"><div><p>이번 달 한마디</p><strong id="tipText">기록을 시작하면 맞춤 팁을 드릴게요.</strong></div></section>
-            <section class="panel chart-panel"><div class="panel-heading"><div><h2>카테고리별 지출</h2></div></div><div class="chart-wrap"><div id="donut" class="donut"><div><strong id="chartTotal">₩0</strong><span>총 지출</span></div></div></div><div id="legend" class="legend"></div><button class="text-button tag-spend-button" id="viewTagSpend" type="button">태그 지출 확인하기</button></section>
+            <section class="panel chart-panel"><div class="panel-heading"><div><h2>카테고리별 지출</h2></div></div><div class="chart-wrap"><div id="donut" class="donut"><div><strong id="chartTotal">₩0</strong><span>총 지출</span></div></div></div><div id="legend" class="legend"></div><section class="mobile-category-tags"><h3>태그별 지출</h3><div id="mobileCategoryTagChart"></div></section><button class="text-button tag-spend-button" id="viewTagSpend" type="button">태그 지출 확인하기</button></section>
             <section class="panel discussion-panel" id="traveler-stories"><h2>여행자 이야기</h2><div id="disqus_thread"></div><script>(function(){var d=document,s=d.createElement('script');s.src='https://triptally.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s)})();</script><noscript>댓글을 보려면 JavaScript를 활성화해 주세요.</noscript></section>
           </aside>
         </section>

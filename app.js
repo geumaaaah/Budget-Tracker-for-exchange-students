@@ -123,7 +123,7 @@ document.querySelector('#closeReport').onclick=()=>{document.querySelector('#rep
 document.querySelector('#reportMonthSelect').onchange=()=>{renderReport();renderComparison()};
 function openTagSpend(){const items=expenses.filter(item=>{const date=new Date(item.createdAt);return date.getFullYear()===selectedMonth.getFullYear()&&date.getMonth()===selectedMonth.getMonth()});renderCategoryTagDonuts('#dashboardTagChart',items);document.querySelector('#tagSpendModal').hidden=false}
 document.querySelector('#viewTagSpend').onclick=openTagSpend;
-document.querySelector('#mobileTagSpendLink').onclick=e=>{e.preventDefault();setMobileScreen('category')};
+document.querySelector('#mobileTagSpendLink').onclick=e=>{e.preventDefault();const items=expenses.filter(item=>{const date=new Date(item.createdAt);return date.getFullYear()===selectedMonth.getFullYear()&&date.getMonth()===selectedMonth.getMonth()});renderCategoryTagDonuts('#mobileCategoryTagChart',items);setMobileScreen('category')};
 document.querySelector('#closeTagSpend').onclick=()=>document.querySelector('#tagSpendModal').hidden=true;
 document.querySelector('#graphBase').onchange=loadExchangeGraph;
 document.querySelector('#graphQuote').onchange=loadExchangeGraph;

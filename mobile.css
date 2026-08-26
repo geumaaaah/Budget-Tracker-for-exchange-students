@@ -1,3 +1,5 @@
+.mobile-category-tags{display:none}
+
 @media (max-width:720px){
   .mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
   .mobile-nav a,.mobile-nav a:first-child,.mobile-nav a:last-child{font-size:9px;text-align:center}
@@ -16,6 +18,11 @@
   .summary-card strong,.summary-card.total strong,#totalSpendKrw,#topCategoryAmount{font-size:20px}
   .second-category-label,#secondCategory,#secondCategoryAmount{display:none}
   .chart-panel,.tag-spend-button{display:none}
+  .mobile-category-tags{display:none}
   body[data-mobile-screen="category"] .topbar,body[data-mobile-screen="category"] .hero,body[data-mobile-screen="category"] .summary-grid,body[data-mobile-screen="category"] .add-panel,body[data-mobile-screen="category"] .records-panel,body[data-mobile-screen="category"] .exchange-card,body[data-mobile-screen="category"] .tip-card,body[data-mobile-screen="category"] .discussion-panel,body[data-mobile-screen="category"] .feedback-cta,body[data-mobile-screen="category"] footer{display:none}
   body[data-mobile-screen="category"] .chart-panel{display:block;order:1;margin-top:28px}
+  body[data-mobile-screen="category"] .mobile-category-tags{display:block;margin-top:29px;padding-top:26px;border-top:1px solid var(--line)}
+  .mobile-category-tags h3{margin:0 0 15px;font:700 18px 'DM Sans'}
+  #mobileCategoryTagChart .category-tag-charts{grid-template-columns:1fr}
+  .rate-modal{padding:25px 20px}
 }
