@@ -1,4 +1,4 @@
-.mobile-category-tags,.mobile-report-button,.mobile-currency-picker{display:none}
+.mobile-category-tags,.mobile-report-button,.mobile-exchange-button,.mobile-currency-picker,.mobile-budget-tip{display:none}
 
 @media (max-width:720px){
   .mobile-nav{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:15px 0 12px;border-bottom:0}
@@ -10,16 +10,18 @@
   .hero>div:first-child{display:none}
   .topbar{height:auto;border-bottom:0;padding:0 0 14px;justify-content:center}
   .currency-picker{display:none}
-  .mobile-report-button{display:block;width:100%;border:0;background:var(--ink);color:#fff;padding:11px;font:600 12px 'DM Sans';cursor:pointer}
+  .mobile-header-actions{display:flex;width:100%;gap:7px}
+  .mobile-report-button,.mobile-exchange-button{display:block;flex:1;border:0;padding:11px 6px;font:600 12px 'DM Sans';cursor:pointer}
+  .mobile-report-button{background:var(--ink);color:#fff}
+  .mobile-exchange-button{background:var(--card);border:1px solid var(--ink);color:var(--ink)}
   footer{display:none}
   .summary-grid{order:2;margin-top:20px}
   .add-panel{order:3}
   .records-panel{order:4}
-  .exchange-card{order:5;margin-top:22px}
+  .exchange-card{display:none}
   .chart-panel{order:6}
-  .tip-card{background:transparent;border:0;border-left:3px solid var(--orange);padding:3px 0 3px 14px;display:block}
-  .tip-card p{margin:0 0 5px;color:var(--orange);font-size:13px;letter-spacing:-.5px}
-  .tip-card strong{font-size:14px;line-height:1.55}
+  .tip-card{display:none}
+  .mobile-budget-tip{display:block;margin-top:19px;padding-left:12px;border-left:3px solid var(--orange);color:var(--ink);font:400 13px/1.55 'DM Sans'}
   body[data-mobile-screen="report"] .report-modal{padding:22px 18px;background:var(--card);border:1px solid var(--line);box-shadow:none}
   body[data-mobile-screen="report"] .report-modal h2{font-size:23px;letter-spacing:-1px}
   body[data-mobile-screen="report"] .close-report{display:none}
@@ -43,5 +45,7 @@
   #mobileCategoryTagChart .tag-donut-legend>div{gap:5px;font-size:9px}
   #mobileCategoryTagChart .tag-donut-legend i{width:6px;height:6px}
   #mobileCategoryTagChart .tag-donut-legend strong{font-size:8px}
+  body[data-mobile-screen="exchange"] .topbar,body[data-mobile-screen="exchange"] .summary-grid,body[data-mobile-screen="exchange"] .add-panel,body[data-mobile-screen="exchange"] .records-panel,body[data-mobile-screen="exchange"] .tip-card,body[data-mobile-screen="exchange"] .chart-panel,body[data-mobile-screen="exchange"] .discussion-panel,body[data-mobile-screen="exchange"] .feedback-cta,body[data-mobile-screen="exchange"] footer{display:none}
+  body[data-mobile-screen="exchange"] .exchange-card{display:block;order:1;margin-top:28px}
   .rate-modal{padding:25px 20px}
 }

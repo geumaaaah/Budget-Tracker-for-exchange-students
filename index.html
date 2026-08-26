@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css?v=20260826-56" />
-    <link rel="stylesheet" href="mobile.css?v=20260826-08" />
+    <link rel="stylesheet" href="mobile.css?v=20260826-09" />
   </head>
   <body>
     <div class="app-shell">
@@ -19,7 +19,7 @@
           <span id="monthLabel">2026년 8월</span>
           <button class="icon-button" id="nextMonth" aria-label="다음 달">›</button>
         </div>
-        <button class="currency-picker" id="settingsButton" type="button"><span class="globe">◎</span><span id="baseCurrencyLabel">기준 통화 설정</span></button><button class="mobile-report-button" id="mobileHeaderReport" type="button">월간 리포트 확인</button>
+        <button class="currency-picker" id="settingsButton" type="button"><span class="globe">◎</span><span id="baseCurrencyLabel">기준 통화 설정</span></button><div class="mobile-header-actions"><button class="mobile-report-button" id="mobileHeaderReport" type="button">월간 리포트 확인</button><button class="mobile-exchange-button" id="mobileExchangeButton" type="button">환율 확인하기</button></div>
       </header>
 
       <main id="top">
@@ -31,7 +31,7 @@
         <section class="summary-grid" aria-label="이번 달 요약">
           <article class="summary-card total"><p>이번 달 지출</p><strong id="totalSpend">₩0</strong><span id="totalSpendKrw">₩0</span></article>
           <article class="summary-card"><p>가장 많이 쓴 항목</p><strong id="topCategory">—</strong><span id="topCategoryAmount">지출을 기록해 보세요</span><p class="second-category-label">다음으로 많이 쓴 항목</p><strong id="secondCategory">—</strong><span id="secondCategoryAmount">—</span></article>
-          <article class="summary-card budget"><p>이번 달 예산</p><div class="budget-value"><strong id="budgetAmount">—</strong><button id="editBudget" type="button">수정</button></div><div class="month-progress-label"><span id="budgetStatus">예산을 설정해 보세요</span></div><div class="progress"><i id="budgetProgress"></i></div><div class="month-progress-label"><span id="monthStatus">이번 달이 0% 지났어요</span></div><div class="progress month-progress"><i id="monthProgress"></i></div></article>
+          <article class="summary-card budget"><p>이번 달 예산</p><div class="budget-value"><strong id="budgetAmount">—</strong><button id="editBudget" type="button">수정</button></div><div class="month-progress-label"><span id="budgetStatus">예산을 설정해 보세요</span></div><div class="progress"><i id="budgetProgress"></i></div><div class="month-progress-label"><span id="monthStatus">이번 달이 0% 지났어요</span></div><div class="progress month-progress"><i id="monthProgress"></i></div><div class="mobile-budget-tip" id="mobileBudgetTip"></div></article>
         </section>
 
         <section class="content-grid">
@@ -66,6 +66,6 @@
     <div class="modal-backdrop report-backdrop" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportTitle" hidden><section class="report-modal"><header><div><h2 id="reportTitle">월간 리포트</h2></div><button id="closeReport" class="close-report" type="button" aria-label="리포트 닫기">×</button></header><label class="report-month-label">보고서 월<select id="reportMonthSelect"></select></label><div class="report-stats"><article><span>총 지출</span><strong id="reportTotal">—</strong></article><article><span>최다 지출 항목</span><strong id="reportTopCategory">—</strong><small id="reportTopAmount">—</small></article><article><span>예산 대비</span><strong id="reportBudgetDelta">—</strong><small id="reportBudgetAmount">—</small></article></div><section class="report-breakdown"><h3>항목별 지출</h3><div id="reportCategoryList"></div></section><section class="report-tags"><h3>태그별 지출</h3><div id="reportTagChart"></div></section><section class="report-comparison"><h3>지난 3개월 지출 비교</h3><div id="reportComparisonChart"></div><p id="reportComparisonNote" class="report-comparison-note"></p></section></section></div>
     <div class="modal-backdrop" id="tagSpendModal" role="dialog" aria-modal="true" aria-labelledby="tagSpendTitle" hidden><section class="currency-modal tag-spend-modal"><header><h2 id="tagSpendTitle">태그별 지출</h2><button id="closeTagSpend" class="close-report" type="button" aria-label="태그 지출 창 닫기">×</button></header><p>선택한 달의 태그별 지출 비율이에요.</p><div id="dashboardTagChart"></div></section></div>
     <div class="modal-backdrop" id="editExpenseModal" role="dialog" aria-modal="true" aria-labelledby="editExpenseTitle" hidden><section class="currency-modal edit-expense-modal"><header><h2 id="editExpenseTitle">지출 수정</h2><button id="closeEditExpense" class="close-report" type="button" aria-label="수정 창 닫기">×</button></header><form id="editExpenseForm"><input id="editExpenseId" type="hidden" /><label>무엇을 결제했나요?<input id="editExpenseName" type="text" maxlength="40" required /></label><div class="form-row two"><label>결제 금액<input id="editExpenseAmount" type="number" min="0.01" step="0.01" required /></label><label>결제 통화<select id="editInputCurrency"><option value="KRW">KRW · ₩</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="JPY">JPY · ¥</option></select></label></div><label>지출 날짜<input id="editExpenseDate" type="date" required /></label><fieldset class="category-field"><div class="category-label"><legend>지출 항목</legend></div><div class="category-options" id="editCategoryOptions"></div><div class="category-label tag-label"><legend>태그</legend></div><div class="tag-options" id="editTagOptions"></div></fieldset><button class="primary-button" type="submit">수정 저장하기</button></form></section></div>
-    <script src="app.js?v=20260826-57"></script>
+    <script src="app.js?v=20260826-58"></script>
   </body>
 </html>
