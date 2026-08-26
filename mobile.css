@@ -15,5 +15,7 @@
   .summary-card p,.summary-card span{font-size:12px}
   .summary-card strong,.summary-card.total strong,#totalSpendKrw,#topCategoryAmount{font-size:20px}
   .second-category-label,#secondCategory,#secondCategoryAmount{display:none}
-  .tag-spend-button{display:none}
+  .chart-panel,.tag-spend-button{display:none}
+  body[data-mobile-screen="category"] .topbar,body[data-mobile-screen="category"] .hero,body[data-mobile-screen="category"] .summary-grid,body[data-mobile-screen="category"] .add-panel,body[data-mobile-screen="category"] .records-panel,body[data-mobile-screen="category"] .exchange-card,body[data-mobile-screen="category"] .tip-card,body[data-mobile-screen="category"] .discussion-panel,body[data-mobile-screen="category"] .feedback-cta,body[data-mobile-screen="category"] footer{display:none}
+  body[data-mobile-screen="category"] .chart-panel{display:block;order:1;margin-top:28px}
 }
