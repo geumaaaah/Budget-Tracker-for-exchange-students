@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260826-32" />
+    <link rel="stylesheet" href="styles.css?v=20260826-37" />
   </head>
   <body>
     <div class="app-shell">
@@ -38,7 +38,7 @@
               <form id="expenseForm">
                 <label>무엇을 결제했나요?<input id="expenseName" type="text" maxlength="40" required /></label>
                 <div class="form-row two"><label>결제 금액<input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="0" required /></label><label>결제 통화<select id="inputCurrency"><option value="KRW">KRW · ₩</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="JPY">JPY · ¥</option></select></label></div>
-                <fieldset class="category-field"><div class="category-label"><legend>지출 항목 <span>복수 선택 가능</span></legend><button id="addCategory" type="button">+ 항목 추가</button></div><div class="category-options" id="categoryOptions"></div><div class="category-label tag-label"><legend>태그 <span>세부 분류</span></legend><button id="addTag" type="button">+ 태그 추가</button></div><div class="tag-options" id="expenseTagOptions"></div></fieldset>
+                <fieldset class="category-field"><div class="category-label"><legend>지출 항목 <span>복수 선택 가능</span></legend></div><div class="category-options" id="categoryOptions"></div><button class="category-add-button" id="addCategory" type="button">+ 항목 추가</button><div class="category-label tag-label"><legend>태그 <span>세부 분류</span></legend></div><div class="tag-options" id="expenseTagOptions"></div><button class="category-add-button" id="addTag" type="button">+ 태그 추가</button></fieldset>
                 <p class="conversion-note" id="conversionNote">기준 통화를 설정하면 환산 금액을 보여드려요.</p>
                 <button class="primary-button" type="submit"><span>+</span> 지출 추가하기</button>
               </form>
