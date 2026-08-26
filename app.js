@@ -90,9 +90,12 @@ document.querySelector('#expenseList').innerHTML=monthExpenses.length?[...monthE
 const budgetGap=budget?Math.round(total/budget*100)-monthProgress:null;
 const tipMessage=budgetGap===null?'예산을 설정하면 소비 속도를 비교해 드릴게요.':budgetGap<-10?'여행은 즐기고, 예산은 아끼고 있어요.<br>지금 페이스라면 이번 달도 든든해요.':Math.abs(budgetGap)<=10?'여행도 즐기고, 예산도 잘 맞춰가고 있어요.<br>지금 페이스라면 이번 달도 안정적이에요.':'여행은 충분히 즐기고 있어 남은 일정은 지출 조절이 필요해요.';document.querySelector('#tipText').innerHTML=tipMessage;document.querySelector('#mobileBudgetTip').innerHTML=tipMessage;
 note()}
-function openModal(){document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';
+function openModal(mode='change'){const isInitial=mode==='initial';document.querySelector('#baseCurrencySelect').value=baseCurrency||'EUR';
 document.querySelector('#travelCurrencySelect').value=travelCurrency;
-document.querySelector('#baseChangeWarning').textContent=expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
+document.querySelector('#modalTitle').innerHTML=isInitial?'여행 지역과 기록 기준을<br />정해 주세요.':'통화 설정을<br />바꿔 주세요.';
+document.querySelector('#currencyModal p').innerHTML=isInitial?'여행 지역 통화는 결제 통화의 기본값으로 설정되고,<br />모든 지출은 기준 통화로 환산되어 기록돼요.':'여행 지역 통화와 기록 기준 통화를 변경할 수 있어요.<br />기존 지출은 기존 기준 통화로 유지돼요.';
+document.querySelector('#saveBaseCurrency').textContent=isInitial?'이 설정으로 시작하기':'이 설정으로 바꾸기';
+document.querySelector('#baseChangeWarning').textContent=!isInitial&&expenses.length?'기준 통화를 바꾸면 기존 기록은 기존 기준 통화로 유지됩니다.':'';
 document.querySelector('#currencyModal').hidden=false}
 document.querySelector('#settingsButton').onclick=()=>{trackMenuClick('base_currency');openModal()};
 document.querySelector('#mobileSettingsButton').onclick=()=>{trackMenuClick('base_currency');openModal()};
@@ -201,7 +204,7 @@ save();
 render()}};
 
 renderCategories();
-if(!baseCurrency&&!localStorage.getItem(onboardingKey))openModal();
+if(!baseCurrency&&!localStorage.getItem(onboardingKey))openModal('initial');
 else{render();
 loadRates()}
 if(baseCurrency)document.querySelector('#graphBase').value=travelCurrency;
