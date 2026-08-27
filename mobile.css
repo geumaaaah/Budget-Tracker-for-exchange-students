@@ -57,6 +57,7 @@
   .mobile-category-tags{display:none}
   body[data-mobile-screen="category"] .topbar,body[data-mobile-screen="category"] .hero,body[data-mobile-screen="category"] .summary-grid,body[data-mobile-screen="category"] .add-panel,body[data-mobile-screen="category"] .records-panel,body[data-mobile-screen="category"] .exchange-card,body[data-mobile-screen="category"] .tip-card,body[data-mobile-screen="category"] .discussion-panel,body[data-mobile-screen="category"] .feedback-cta,body[data-mobile-screen="category"] footer{display:none}
   body[data-mobile-screen="category"] .chart-panel{display:block;order:1;margin-top:28px}
+  body[data-mobile-screen="category"] .analysis-subtitle{display:block;margin:0 0 15px;font:700 18px 'DM Sans'}
   body[data-mobile-screen="category"] .mobile-category-tags{display:block;margin-top:29px;padding-top:26px;border-top:1px solid var(--line)}
   .mobile-category-tags h3{margin:0 0 15px;font:700 18px 'DM Sans'}
   #mobileCategoryTagChart .category-tag-charts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
