@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trip-tally-static-v3';
+const CACHE_NAME = 'trip-tally-static-v2';
 const APP_SHELL = [
   './',
   './index.html',
