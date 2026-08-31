@@ -219,4 +219,4 @@ window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();def
 pwaInstallButton.onclick=async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=undefined;hidePwaInstallPrompt()};
 window.addEventListener('appinstalled',()=>{deferredInstallPrompt=undefined;hidePwaInstallPrompt()});
 if(pwaIsIosSafari)showPwaInstallPrompt('공유 버튼 → ‘홈 화면에 추가’를 눌러 앱처럼 사용하세요.');
-if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.getRegistrations().then(registrations=>Promise.all(registrations.map(registration=>registration.unregister()))).catch(()=>{}));
